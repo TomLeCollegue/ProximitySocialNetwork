@@ -6,15 +6,6 @@ public class Profil {
     private String birthDate;
     private String password;
 
-    public Profil(String name, String email, String birthDate, String password) {
-        this.name = name;
-        this.email = email;
-        this.birthDate = birthDate;
-        this.password = password;
-    }
-
-    public Profil() {
-    }
 
     public String getName() {
         return name;

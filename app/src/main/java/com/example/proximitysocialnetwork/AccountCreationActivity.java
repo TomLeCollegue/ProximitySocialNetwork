@@ -35,8 +35,11 @@ public class AccountCreationActivity extends AppCompatActivity {
         confirmAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(password.getText().equals(confirmPassword.getText())){
-                    MainActivity.profil = new Profil(name.getText().toString(),email.getText().toString(),birthDate.getText().toString(),password.getText().toString());
+                if(password.getText().toString().equals(confirmPassword.getText().toString())){
+                    MainActivity.profil.setName(name.getText().toString());
+                    MainActivity.profil.setEmail(email.getText().toString());
+                    MainActivity.profil.setBirthDate(birthDate.getText().toString());
+                    MainActivity.profil.setPassword(password.getText().toString());
                 }
             }
         });
