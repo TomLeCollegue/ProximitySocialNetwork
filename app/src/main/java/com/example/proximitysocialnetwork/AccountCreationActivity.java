@@ -104,7 +104,7 @@ public class AccountCreationActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode != AccountCreationActivity.getRequest) {
+        if (requestCode != getRequestCodeRequiredPermissions()) {
             return;
         }
 
@@ -136,5 +136,13 @@ public class AccountCreationActivity extends AppCompatActivity {
             imageURI = data.getData();
             profileImage.setImageURI(imageURI);
         }
+    }
+
+    public static int getRequestCodeRequiredPermissions() {
+        return REQUEST_CODE_REQUIRED_PERMISSIONS;
+    }
+
+    public static String[] getRequiredPermissions() {
+        return REQUIRED_PERMISSIONS;
     }
 }
