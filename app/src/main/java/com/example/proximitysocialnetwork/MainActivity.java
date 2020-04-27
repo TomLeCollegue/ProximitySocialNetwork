@@ -2,10 +2,17 @@ package com.example.proximitysocialnetwork;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -17,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        loadProfil();
 
         if (profil == null) {
             profil = new Profil();
@@ -38,5 +47,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+    public void loadProfil(){
+        try {
+            FileInputStream is = openFileInput("profil");
+            ObjectInputStream ois = new ObjectInputStream(is);
+            profil = (Profil) ois.readObject();
+            ois.close();
+            is.close();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 }
