@@ -1,9 +1,13 @@
 package com.example.proximitysocialnetwork;
 
+import android.media.Image;
+import android.net.Uri;
+
 public class Profil {
     private String name;
     private String email;
     private String birthDate;
+    private String profileImage;
     private String password;
 
 
@@ -38,4 +42,10 @@ public class Profil {
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public String getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(String profileImage){ this.profileImage = profileImage;}
 }
