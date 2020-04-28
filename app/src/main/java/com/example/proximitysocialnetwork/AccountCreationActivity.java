@@ -20,6 +20,8 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -62,7 +64,7 @@ public class AccountCreationActivity extends AppCompatActivity {
         confirmPassword = (EditText) findViewById(R.id.confirm_password);
         confirmAccount = (Button) findViewById(R.id.button_creation_account);
         profileImage = (ImageView) findViewById(R.id.profile_image);
-        // ****************************************************************
+         // ****************************************************************
 
         confirmAccount.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,7 +81,8 @@ public class AccountCreationActivity extends AppCompatActivity {
                     Bitmap bitmap = drawable.getBitmap();
 
                     String filepath = mContext.getExternalFilesDir(null).getAbsolutePath();
-                    File dir = new File (filepath + "/Sonar/");
+                    File dir = new File (filepath.replace("/files", "") + "/ProfileImages/");
+                    Log.d(TAG, filepath.replace("/files", ""));
                     dir.mkdir();
                     File file = new File (dir, "profile_pic_"+ name.getText().toString().replace(" ","") + ".jpg");
                     Log.d("test", file.toString());
@@ -88,7 +91,7 @@ public class AccountCreationActivity extends AppCompatActivity {
                     } catch (FileNotFoundException e){
                         e.printStackTrace();
                     }
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 35, outputStream);
 
                     try {
                         outputStream.flush();
@@ -112,6 +115,9 @@ public class AccountCreationActivity extends AppCompatActivity {
         profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.alpha);
+                profileImage.startAnimation(animation);
+
                 openGallery();
             }
         });
