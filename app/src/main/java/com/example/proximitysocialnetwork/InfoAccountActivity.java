@@ -2,9 +2,14 @@ package com.example.proximitysocialnetwork;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.io.File;
 
 public class InfoAccountActivity extends AppCompatActivity {
 
@@ -12,7 +17,8 @@ public class InfoAccountActivity extends AppCompatActivity {
     private TextView email;
     private TextView date;
     private TextView password;
-    private TextView profileImage;
+    private TextView profileImageText;
+    private ImageView profileImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,12 +28,20 @@ public class InfoAccountActivity extends AppCompatActivity {
         email = findViewById(R.id.email);
         date = findViewById(R.id.birthdate);
         password = findViewById(R.id.password);
-        profileImage = findViewById(R.id.textUriProfilePic);
+        profileImageText = findViewById(R.id.textUriProfilePic);
+        profileImage = findViewById(R.id.profilePic);
 
         name.setText(MainActivity.profil.getName());
         email.setText(MainActivity.profil.getEmail());
         date.setText(MainActivity.profil.getBirthDate());
         password.setText(MainActivity.profil.getPassword());
-        profileImage.setText(MainActivity.profil.getProfileImage());
+        profileImageText.setText(MainActivity.profil.getProfileImage());
+
+        File imgFile = new File(MainActivity.profil.getProfileImage());
+        if (imgFile.exists())
+        {
+            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.toString());
+            profileImage.setImageBitmap(myBitmap);
+        }
     }
 }

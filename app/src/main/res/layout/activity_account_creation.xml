@@ -31,9 +31,7 @@
             android:layout_height="96dp"
             android:layout_gravity="center"
             android:layout_marginBottom="10dp"
-            android:src="@drawable/add_profil_img"
-            app:civ_border_width="50dp"
-            app:civ_border_color="#FFFFFF"/>
+            android:src="@drawable/add_profil_img" />
 
         <EditText
             android:id="@+id/name"

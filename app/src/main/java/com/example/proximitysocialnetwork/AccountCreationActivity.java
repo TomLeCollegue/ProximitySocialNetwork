@@ -6,12 +6,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -20,6 +24,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 
 public class AccountCreationActivity extends AppCompatActivity {
 
@@ -32,7 +42,9 @@ public class AccountCreationActivity extends AppCompatActivity {
     private Button confirmAccount;
     private ImageView profileImage;
     private Uri imageURI;
-    private static final int PICK_IMAGE = 10;
+    private static final int PICK_IMAGE = 100;
+    OutputStream outputStream;
+    Context mContext;
 
 
     @Override
@@ -40,6 +52,7 @@ public class AccountCreationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_creation);
 
+        mContext = getApplicationContext();
 
         // ************ link id to view **********************************
         name = (EditText) findViewById(R.id.name);
@@ -62,6 +75,34 @@ public class AccountCreationActivity extends AppCompatActivity {
                     MainActivity.profil.setPassword(password.getText().toString());
                     MainActivity.profil.setProfileImage(imageURI.toString());
 
+                    BitmapDrawable drawable = (BitmapDrawable) profileImage.getDrawable();
+                    Bitmap bitmap = drawable.getBitmap();
+
+                    String filepath = mContext.getExternalFilesDir(null).getAbsolutePath();
+                    File dir = new File (filepath + "/Sonar/");
+                    dir.mkdir();
+                    File file = new File (dir, "profile_pic_"+ name.getText().toString().replace(" ","") + ".jpg");
+                    Log.d("test", file.toString());
+                    try{
+                        outputStream = new FileOutputStream(file);
+                    } catch (FileNotFoundException e){
+                        e.printStackTrace();
+                    }
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+
+                    try {
+                        outputStream.flush();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    try {
+                        outputStream.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    MainActivity.profil.setProfileImage(file.toString());
+
                     Intent intent = new Intent(AccountCreationActivity.this, MainActivity.class);
                     startActivity(intent);
                 }
@@ -71,52 +112,12 @@ public class AccountCreationActivity extends AppCompatActivity {
         profileImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isStoragePermissionGranted()==false)  openGallery();
+                openGallery();
             }
         });
 
     }
-    public  boolean isStoragePermissionGranted() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_GRANTED) {
-                Log.v(TAG,"Permission is granted");
-                return true;
-            } else {
 
-                Log.v(TAG,"Permission is revoked");
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-                return false;
-            }
-        }
-        else { //permission is automatically granted on sdk<23 upon installation
-            Log.v(TAG,"Permission is granted");
-            return true;
-        }
-    }
-    /*
-            * Request needed permissions to user through UI
-     * @param requestCode
-     * @param permissions
-     * @param grantResults
-     */
-    @CallSuper
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode != getRequestCodeRequiredPermissions()) {
-            return;
-        }
-
-        for (int grantResult : grantResults) {
-            if (grantResult == PackageManager.PERMISSION_DENIED) {
-                Toast.makeText(this,"Permissions manquantes", Toast.LENGTH_LONG).show();
-                finish();
-                return;
-            }
-        }
-        recreate();
-    }
 
     private void openGallery() {
         Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
@@ -136,13 +137,5 @@ public class AccountCreationActivity extends AppCompatActivity {
             imageURI = data.getData();
             profileImage.setImageURI(imageURI);
         }
-    }
-
-    public static int getRequestCodeRequiredPermissions() {
-        return REQUEST_CODE_REQUIRED_PERMISSIONS;
-    }
-
-    public static String[] getRequiredPermissions() {
-        return REQUIRED_PERMISSIONS;
     }
 }
