@@ -14,6 +14,10 @@ import android.graphics.drawable.BitmapDrawable;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
+
+import android.content.Context;
+import android.content.Intent;
+
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -32,6 +36,10 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 
 public class AccountCreationActivity extends AppCompatActivity {
 
@@ -75,6 +83,7 @@ public class AccountCreationActivity extends AppCompatActivity {
                     MainActivity.profil.setEmail(email.getText().toString());
                     MainActivity.profil.setBirthDate(birthDate.getText().toString());
                     MainActivity.profil.setPassword(password.getText().toString());
+
                     MainActivity.profil.setProfileImage(imageURI.toString());
 
                     BitmapDrawable drawable = (BitmapDrawable) profileImage.getDrawable();
@@ -108,7 +117,25 @@ public class AccountCreationActivity extends AppCompatActivity {
 
                     Intent intent = new Intent(AccountCreationActivity.this, MainActivity.class);
                     startActivity(intent);
+
+
+                    try {
+                        FileOutputStream fos = openFileOutput("profil",Context.MODE_PRIVATE);
+                        ObjectOutputStream oos = new ObjectOutputStream(fos);
+                        // write object to file
+                        oos.writeObject(MainActivity.profil);
+                        // closing resources
+                        oos.close();
+                        fos.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    startActivity(new Intent(AccountCreationActivity.this, MainActivity.class));
+
                 }
+
+
             }
         });
 
