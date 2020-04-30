@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
             net = new NetworkHelper(this);
         }
 
+
         createAccount = (Button) findViewById(R.id.create_account);
         infoAccount = (Button) findViewById(R.id.info_compte);
         searchPeople = (Button) findViewById(R.id.search_people);
@@ -80,13 +81,10 @@ public class MainActivity extends AppCompatActivity {
         sendProfil.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    net.sendToClient(profil);
+                    net.StopAll();
+                    net = new NetworkHelper(getApplicationContext());
+                    clientCo.setText("Non connecté");
                 }
-                catch (IOException e){
-
-                }
-            }
         });
     }
 

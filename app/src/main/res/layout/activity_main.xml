@@ -41,14 +41,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/button_style_account_create"
-            android:text="Envoyer Profil" />
+            android:text="arreter de Chercher" />
 
         <TextView
             android:id="@+id/client_co"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal|center_vertical"
-            android:text="ID CLIENT" />
+            android:text="Non connecté" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

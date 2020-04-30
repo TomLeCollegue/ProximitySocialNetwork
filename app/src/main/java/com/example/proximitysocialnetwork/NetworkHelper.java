@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -46,7 +47,8 @@ public class NetworkHelper implements Serializable {
                     Manifest.permission.CHANGE_WIFI_STATE,
                     Manifest.permission.ACCESS_COARSE_LOCATION,
                     Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.READ_EXTERNAL_STORAGE
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.INTERNET
             };
 
     private static final int REQUEST_CODE_REQUIRED_PERMISSIONS = 1;
@@ -102,8 +104,12 @@ public class NetworkHelper implements Serializable {
             new EndpointDiscoveryCallback() {
                 @Override
                 public void onEndpointFound(String endpointId, DiscoveredEndpointInfo info) {
+
+                    Toast.makeText(appContext, info.getEndpointName() , Toast.LENGTH_SHORT).show();
+                    Log.w("newEndPoint", info.getEndpointName());
+
                     // An endpoint was found. We request a connection to it.
-                    Nearby.getConnectionsClient(appContext)
+                    /*Nearby.getConnectionsClient(appContext)
                             .requestConnection(MainActivity.profil.getName(), endpointId, connectionLifecycleCallback)
                             .addOnFailureListener(
                                     new OnFailureListener() {
@@ -111,7 +117,7 @@ public class NetworkHelper implements Serializable {
                                         public void onFailure(@NonNull Exception e) {
                                             Log.w(TAG,"requestConnection() failed.", e);
                                         }
-                                    });
+                                    });*/
                 }
 
                 @Override
@@ -164,7 +170,10 @@ public class NetworkHelper implements Serializable {
             };
 
 
+    public void StopAll(){
+        connectionsClient.stopAllEndpoints();
 
+    }
 
 
     // find a phone nearby
