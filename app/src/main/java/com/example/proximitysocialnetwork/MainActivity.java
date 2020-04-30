@@ -35,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
     private Button sendProfil;
     public static TextView clientCo;
 
+    private Button connection;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
         searchPeople = (Button) findViewById(R.id.search_people);
         sendProfil = (Button) findViewById(R.id.send_account);
         clientCo = (TextView) findViewById(R.id.client_co);
+        connection = findViewById(R.id.button_co);
 
 
         // Intent to activities
@@ -70,6 +73,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, InfoAccountActivity.class));
+            }
+        });
+
+        connection.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, loginActivity.class));
             }
         });
 

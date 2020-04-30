@@ -49,6 +49,12 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal|center_vertical"
             android:text="Non connecté" />
+
+        <Button
+            android:id="@+id/button_co"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="se Connecter" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
