@@ -31,6 +31,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -40,6 +48,8 @@ import java.io.OutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AccountCreationActivity extends AppCompatActivity {
 
@@ -130,6 +140,7 @@ public class AccountCreationActivity extends AppCompatActivity {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+                    create_account();
 
                     startActivity(new Intent(AccountCreationActivity.this, MainActivity.class));
 
@@ -170,5 +181,38 @@ public class AccountCreationActivity extends AppCompatActivity {
             imageURI = data.getData();
             profileImage.setImageURI(imageURI);
         }
+    }
+
+    private void create_account(){
+        String url = "http://89.87.13.28:8800/database/proximity_social_network/php-request/create_account.php";
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                if(response.trim().equals("success")){
+                    //Toast.makeText(getApplicationContext(), "Login success", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    //Toast.makeText(getApplicationContext(), "Login failed", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), "error :" + error.toString(), Toast.LENGTH_SHORT).show();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("email", email.getText().toString().trim());
+                params.put("username", email.getText().toString().trim());
+                params.put("birthdate", birthDate.getText().toString().trim());
+                params.put("password", password.getText().toString().trim());
+                params.put("uri_picture", "1");
+                return params;
+            }
+        };
+        requestQueue.add(stringRequest);
     }
 }
