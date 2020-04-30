@@ -45,6 +45,16 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="password" />
+
+        <TextView
+            android:id="@+id/textUriProfilePic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Uri" />
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/profilePic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

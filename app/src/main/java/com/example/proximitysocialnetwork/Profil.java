@@ -1,5 +1,10 @@
 package com.example.proximitysocialnetwork;
 
+import android.media.Image;
+import android.net.Uri;
+
+
+
 import android.content.Context;
 
 import java.io.FileInputStream;
@@ -10,9 +15,11 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 public class Profil implements Serializable {
+
     private String name;
     private String email;
     private String birthDate;
+    private String profileImage;
     private String password;
 
 
@@ -49,4 +56,9 @@ public class Profil implements Serializable {
     }
 
 
+    public String getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(String profileImage){ this.profileImage = profileImage;}
 }
