@@ -197,6 +197,7 @@ public class AccountCreationActivity extends AppCompatActivity {
 
                 //encodes image to string from base 64
                 String imageEncoded = new ImageGestion().imageToString(myImageBitmap);
+                params.put("name_picture", "profile_pic_"+ email.getText().toString());
                 params.put("profile_picture_test", imageEncoded);
 
                 return params;
