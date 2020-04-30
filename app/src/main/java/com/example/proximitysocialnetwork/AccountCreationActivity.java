@@ -2,11 +2,17 @@ package com.example.proximitysocialnetwork;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 
 public class AccountCreationActivity extends AppCompatActivity {
 
@@ -40,7 +46,23 @@ public class AccountCreationActivity extends AppCompatActivity {
                     MainActivity.profil.setEmail(email.getText().toString());
                     MainActivity.profil.setBirthDate(birthDate.getText().toString());
                     MainActivity.profil.setPassword(password.getText().toString());
+
+                    try {
+                        FileOutputStream fos = openFileOutput("profil",Context.MODE_PRIVATE);
+                        ObjectOutputStream oos = new ObjectOutputStream(fos);
+                        // write object to file
+                        oos.writeObject(MainActivity.profil);
+                        // closing resources
+                        oos.close();
+                        fos.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    startActivity(new Intent(AccountCreationActivity.this, MainActivity.class));
                 }
+
+
             }
         });
 
