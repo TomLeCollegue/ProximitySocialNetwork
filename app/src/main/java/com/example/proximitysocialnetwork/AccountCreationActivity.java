@@ -1,6 +1,7 @@
 package com.example.proximitysocialnetwork;
 
 import androidx.annotation.CallSuper;
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -10,6 +11,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -101,15 +103,21 @@ public class AccountCreationActivity extends AppCompatActivity {
         confirmAccount = (Button) findViewById(R.id.button_creation_account);
         profileImage = (ImageView) findViewById(R.id.profile_image);
         loading = findViewById(R.id.progressBar2);
+
+        final ColorStateList oldColors =  email.getTextColors();
          // ****************************************************************
 
         confirmAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Animation animation= AnimationUtils.loadAnimation(getApplicationContext(), R.anim.lefttoright);
                 if(password.getText().toString().equals(confirmPassword.getText().toString())){
                     correctForm = true;
                     //saveToInternalStorage();
-
+                    password.setTextColor(oldColors);
+                    password.setBackgroundResource(R.drawable.plaintextstyle);
+                    confirmPassword.setTextColor(oldColors);
+                    confirmPassword.setBackgroundResource(R.drawable.plaintextstyle);
                     // Verif info Form
                     String regexEmail = "^[A-Za-z0-9+_.-]+@(.+)$";
                     String regexUsername = "^([a-zA-Z]{2,}\\s[a-zA-z]{1,}'?-?[a-zA-Z]{2,}\\s?([a-zA-Z]{1,})?)";
@@ -127,24 +135,56 @@ public class AccountCreationActivity extends AppCompatActivity {
                     Bitmap bmapimage = ((BitmapDrawable) profileImage.getDrawable()).getBitmap();
                     Drawable crossImg = getResources().getDrawable(R.drawable.add_profil_img);
                     Bitmap bmapcross = ((BitmapDrawable) crossImg).getBitmap();
+
+
                     if(bmapimage.sameAs(bmapcross)){
                         correctForm = false;
-                        Toast.makeText(getApplicationContext(),"Mettez une photo de profil", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(),"Mettez une photo de profil", Toast.LENGTH_SHORT).show();
+                        profileImage.startAnimation(animation);
                     }
                     if(!matcherEmail.find()) {
-                        Toast.makeText(getApplicationContext(),"Entrez un Email Valide", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(),"Entrez un Email Valide", Toast.LENGTH_SHORT).show();
                         correctForm = false;
+
+                        email.setBackgroundResource(R.drawable.plaintextstylered);
+                        email.setTextColor(getResources().getColor(R.color.ColorRed));
+                        email.startAnimation(animation);
+
+                    }
+                    else{
+                        email.setTextColor(oldColors);
+                        email.setBackgroundResource(R.drawable.plaintextstyle);
 
                     }
                     if(!matcherUsername.find()) {
-                        Toast.makeText(getApplicationContext(),"Entrez un Nom Valide", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(),"Entrez un Nom Valide", Toast.LENGTH_SHORT).show();
                         correctForm = false;
+                        name.setBackgroundResource(R.drawable.plaintextstylered);
+                        name.setTextColor(getResources().getColor(R.color.ColorRed));
+                        name.startAnimation(animation);
+                    }
+                    else{
+                        name.setTextColor(oldColors);
+                        name.setBackgroundResource(R.drawable.plaintextstyle);
                     }
                     if(!matcherPassword.find()) {
                         Toast.makeText(getApplicationContext(),"Password must be at least 8 characters, " +
                                 "and must include at least one upper case letter, one lower case letter, and one numeric digit or special character.", Toast.LENGTH_LONG).show();
                         correctForm = false;
+                        password.setBackgroundResource(R.drawable.plaintextstylered);
+                        password.setTextColor(getResources().getColor(R.color.ColorRed));
+                        password.startAnimation(animation);
+                        confirmPassword.setBackgroundResource(R.drawable.plaintextstylered);
+                        confirmPassword.setTextColor(getResources().getColor(R.color.ColorRed));
+                        confirmPassword.startAnimation(animation);
                     }
+                    else {
+                        password.setTextColor(oldColors);
+                        password.setBackgroundResource(R.drawable.plaintextstyle);
+                        confirmPassword.setTextColor(oldColors);
+                        confirmPassword.setBackgroundResource(R.drawable.plaintextstyle);
+                    }
+
 
 
                     if(correctForm) {
@@ -156,6 +196,14 @@ public class AccountCreationActivity extends AppCompatActivity {
                         saveToServer();
                     }
 
+                }
+                else{
+                    password.setBackgroundResource(R.drawable.plaintextstylered);
+                    password.setTextColor(getResources().getColor(R.color.ColorRed));
+                    password.startAnimation(animation);
+                    confirmPassword.setBackgroundResource(R.drawable.plaintextstylered);
+                    confirmPassword.setTextColor(getResources().getColor(R.color.ColorRed));
+                    confirmPassword.startAnimation(animation);
                 }
 
 

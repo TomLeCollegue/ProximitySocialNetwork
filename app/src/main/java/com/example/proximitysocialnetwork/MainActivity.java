@@ -10,9 +10,11 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,7 +25,14 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.proximitysocialnetwork.Profil;
+
+import static android.graphics.Bitmap.Config.RGB_565;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
     private String mEmail;
 
     SessionManager sessionManager;
+    private ImageView profileImage;
+    private String urlDownload;
 
 
     @Override
@@ -53,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
 
         sessionManager = new SessionManager(this);
 
-
+        profileImage = findViewById(R.id.profilePic2);
         infoAccount = (Button) findViewById(R.id.info_compte);
         searchPeople = (Button) findViewById(R.id.search_people);
         sendProfil = (Button) findViewById(R.id.send_account);
@@ -66,9 +77,16 @@ public class MainActivity extends AppCompatActivity {
         mName = user.get(sessionManager.NAME);
         mEmail = user.get(sessionManager.EMAIL);
 
-        if (net == null) {
-            net = new NetworkHelper(this, mEmail);
+
+
+        if(sessionManager.isLoggin()) {
+            if (net == null) {
+             net = new NetworkHelper(this, mEmail);
+            }
         }
+
+        urlDownload = "http://89.87.13.28:8800/database/proximity_social_network/images/profile_pic_"+ mEmail +".jpg";
+        downloadProfileImage();
 
         name.setText(mName);
         email.setText(mEmail);
@@ -175,5 +193,27 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    public void downloadProfileImage(){
+
+        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+        ImageRequest request = new ImageRequest(urlDownload, new Response.Listener<Bitmap>() {
+            @Override
+            public void onResponse(Bitmap response) {
+                profileImage.setImageBitmap(response);
+                profileImage.setVisibility(View.VISIBLE);
+                //progressDownload.setVisibility(View.GONE);
+                Toast.makeText(MainActivity.this, "Profile Image Downloaded Successfully", Toast.LENGTH_LONG).show();
+            }
+        }, 700, 700, ImageView.ScaleType.CENTER, RGB_565, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                //progressDownload.setVisibility(View.GONE);
+                Toast.makeText(MainActivity.this, "Error while downloading image", Toast.LENGTH_LONG).show();
+            }
+        }
+        );
+        requestQueue.add(request);
     }
 }

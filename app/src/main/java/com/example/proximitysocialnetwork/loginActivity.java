@@ -6,6 +6,8 @@ import android.app.DownloadManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.textclassifier.TextLinks;
 import android.widget.Button;
 import android.widget.EditText;
@@ -43,6 +45,7 @@ public class loginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         sessionManager = new SessionManager(this);
 
+
         buttonLogin = findViewById(R.id.button_login);
         email = findViewById(R.id.mail_adress);
         password = findViewById(R.id.password);
@@ -51,9 +54,9 @@ public class loginActivity extends AppCompatActivity {
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent myintent = new Intent(loginActivity.this, MainActivity.class);
-                startActivity(myintent);
+
                 Login();
+
             }
         });
 
@@ -67,6 +70,7 @@ public class loginActivity extends AppCompatActivity {
 
     private void Login(){
         String url = "http://89.87.13.28:8800/database/proximity_social_network/php-request/login.php";
+        final Animation animation= AnimationUtils.loadAnimation(getApplicationContext(), R.anim.lefttoright);
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
@@ -86,19 +90,23 @@ public class loginActivity extends AppCompatActivity {
                             sessionManager.createSession(name,email);
                             startActivity(new Intent(loginActivity.this, MainActivity.class));
 
-                            //MainActivity.profil = new Profil(name, email, "1999/03/15");
 
                             Toast.makeText(getApplicationContext(), "Connecté avec succès", Toast.LENGTH_SHORT).show();
                         }
 
                     }
                     else{
-                        Toast.makeText(getApplicationContext(), "Connecté avec succès", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getApplicationContext(), "Connecté avec succès", Toast.LENGTH_SHORT).show();
+                        email.startAnimation(animation);
+                        password.startAnimation(animation);
+
                     }
                 }
                 catch (JSONException e){
                     e.printStackTrace();
-                    Toast.makeText(getApplicationContext(), " error " + e.toString(), Toast.LENGTH_SHORT).show();
+                    email.startAnimation(animation);
+                    password.startAnimation(animation);
+                    //Toast.makeText(getApplicationContext(), " error " + e.toString(), Toast.LENGTH_SHORT).show();
                 }
                 /* if(response.trim().equals("success")){
                     Toast.makeText(getApplicationContext(), "Login success", Toast.LENGTH_SHORT).show();
