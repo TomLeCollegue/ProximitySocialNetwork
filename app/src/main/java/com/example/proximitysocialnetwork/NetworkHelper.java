@@ -108,7 +108,7 @@ public class NetworkHelper implements Serializable {
                 @Override
                 public void onEndpointFound(String endpointId, DiscoveredEndpointInfo info) {
 
-                    Toast.makeText(appContext, info.getEndpointName() , Toast.LENGTH_SHORT).show();
+                    Toast.makeText(appContext, "Detecté a proximité :" + info.getEndpointName() , Toast.LENGTH_SHORT).show();
                     Log.w("newEndPoint", info.getEndpointName());
 
                 }

@@ -107,7 +107,7 @@ public class AccountCreationActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(password.getText().toString().equals(confirmPassword.getText().toString())){
-
+                    correctForm = true;
                     //saveToInternalStorage();
 
                     // Verif info Form
