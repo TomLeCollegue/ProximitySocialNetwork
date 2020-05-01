@@ -43,12 +43,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        loadProfil();
+        //loadProfil();
 
-        // create profil and networkHelper if not exist
-        if (profil == null) {
-            profil = new Profil();
-        }
         if (net == null) {
             net = new NetworkHelper(this);
         }

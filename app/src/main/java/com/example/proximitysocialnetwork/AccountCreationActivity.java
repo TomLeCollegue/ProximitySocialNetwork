@@ -30,6 +30,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -68,6 +69,8 @@ public class AccountCreationActivity extends AppCompatActivity {
     private Button confirmAccount;
     private ImageView profileImage;
 
+    private ProgressBar loading;
+
     //image view location on phone
     private Uri imageURI;
     // request code for image
@@ -95,6 +98,7 @@ public class AccountCreationActivity extends AppCompatActivity {
         confirmPassword = (EditText) findViewById(R.id.confirm_password);
         confirmAccount = (Button) findViewById(R.id.button_creation_account);
         profileImage = (ImageView) findViewById(R.id.profile_image);
+        loading = findViewById(R.id.progressBar2);
          // ****************************************************************
 
         confirmAccount.setOnClickListener(new View.OnClickListener() {
@@ -143,9 +147,10 @@ public class AccountCreationActivity extends AppCompatActivity {
 
                     if(correctForm) {
                         // correct from : add to the bdd.
+                        confirmAccount.setVisibility(View.GONE);
+                        loading.setVisibility(View.VISIBLE);
                         create_account();
                         saveToServer();
-                        startActivity(new Intent(AccountCreationActivity.this, loginActivity.class));
                     }
 
                 }
@@ -218,7 +223,8 @@ public class AccountCreationActivity extends AppCompatActivity {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, urlUpload, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Toast.makeText(AccountCreationActivity.this, response, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(AccountCreationActivity.this, response, Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(AccountCreationActivity.this, loginActivity.class));
             }
 
         }, new Response.ErrorListener() {
