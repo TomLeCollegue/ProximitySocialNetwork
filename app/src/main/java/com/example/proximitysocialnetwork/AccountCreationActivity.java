@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
@@ -29,6 +30,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -67,10 +69,15 @@ public class AccountCreationActivity extends AppCompatActivity {
     private Button confirmAccount;
     private ImageView profileImage;
 
+    private ProgressBar loading;
+
     //image view location on phone
     private Uri imageURI;
     // request code for image
     private static final int PICK_IMAGE = 100;
+
+    Boolean correctForm = true;
+
 
     Context mContext;
     //
@@ -91,6 +98,7 @@ public class AccountCreationActivity extends AppCompatActivity {
         confirmPassword = (EditText) findViewById(R.id.confirm_password);
         confirmAccount = (Button) findViewById(R.id.button_creation_account);
         profileImage = (ImageView) findViewById(R.id.profile_image);
+        loading = findViewById(R.id.progressBar2);
          // ****************************************************************
 
         confirmAccount.setOnClickListener(new View.OnClickListener() {
@@ -98,16 +106,7 @@ public class AccountCreationActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(password.getText().toString().equals(confirmPassword.getText().toString())){
 
-                    MainActivity.profil.setName(name.getText().toString());
-                    MainActivity.profil.setEmail(email.getText().toString());
-                    MainActivity.profil.setBirthDate(birthDate.getText().toString());
-                    MainActivity.profil.setPassword(password.getText().toString());
-
-                    MainActivity.profil.setProfileImage(imageURI.toString());
-
                     //saveToInternalStorage();
-
-                    //startActivity(new Intent(AccountCreationActivity.this, MainActivity.class));
 
                     // Verif info Form
                     String regexEmail = "^[A-Za-z0-9+_.-]+@(.+)$";
@@ -123,8 +122,13 @@ public class AccountCreationActivity extends AppCompatActivity {
                     Matcher matcherUsername = patternUsername.matcher(name.getText().toString().trim());
                     Matcher matcherPassword = patternPassword.matcher(password.getText().toString().trim());
 
-                    Boolean correctForm = true;
-
+                    Bitmap bmapimage = ((BitmapDrawable) profileImage.getDrawable()).getBitmap();
+                    Drawable crossImg = getResources().getDrawable(R.drawable.add_profil_img);
+                    Bitmap bmapcross = ((BitmapDrawable) crossImg).getBitmap();
+                    if(bmapimage.sameAs(bmapcross)){
+                        correctForm = false;
+                        Toast.makeText(getApplicationContext(),"Mettez une photo de profil", Toast.LENGTH_SHORT).show();
+                    }
                     if(!matcherEmail.find()) {
                         Toast.makeText(getApplicationContext(),"Entrez un Email Valide", Toast.LENGTH_SHORT).show();
                         correctForm = false;
@@ -142,11 +146,11 @@ public class AccountCreationActivity extends AppCompatActivity {
 
 
                     if(correctForm) {
-
                         // correct from : add to the bdd.
+                        confirmAccount.setVisibility(View.GONE);
+                        loading.setVisibility(View.VISIBLE);
                         create_account();
                         saveToServer();
-                        startActivity(new Intent(AccountCreationActivity.this, loginActivity.class));
                     }
 
                 }
@@ -219,7 +223,8 @@ public class AccountCreationActivity extends AppCompatActivity {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, urlUpload, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Toast.makeText(AccountCreationActivity.this, response, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(AccountCreationActivity.this, response, Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(AccountCreationActivity.this, loginActivity.class));
             }
 
         }, new Response.ErrorListener() {
@@ -270,7 +275,7 @@ public class AccountCreationActivity extends AppCompatActivity {
     }
 
     private void create_account(){
-        String url = "http://89.87.13.28:8800/database/proximity_social_network/php-request/create_account.php";
+        String url = "http://89.87.13.28:8800/database/proximity_social_network/php-request/register.php";
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
@@ -295,7 +300,7 @@ public class AccountCreationActivity extends AppCompatActivity {
                 params.put("username", name.getText().toString().trim());
                 params.put("birthdate", birthDate.getText().toString().trim());
                 params.put("password", password.getText().toString().trim());
-                params.put("uri_picture", "1");
+                params.put("uri_picture", "profile_pic_"+ email.getText().toString());
                 return params;
             }
         };

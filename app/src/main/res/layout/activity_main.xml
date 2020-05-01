@@ -24,13 +24,20 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:gravity="center">
-        <Button
-            android:id="@+id/create_account"
+
+        <TextView
+            android:id="@+id/name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:background="@drawable/button_style_account_create"
-            android:text="Creer un compte" />
+            android:gravity="center_horizontal"
+            android:text="name" />
+
+        <TextView
+            android:id="@+id/email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="email" />
 
         <Button
             android:id="@+id/info_compte"
@@ -61,13 +68,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal|center_vertical"
-            android:text="Non connecté" />
+            android:text="Nearby Off" />
 
         <Button
-            android:id="@+id/button_co"
+            android:id="@+id/logout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="se Connecter" />
+            android:text="Se deconnecter" />
+
     </LinearLayout>
 
 

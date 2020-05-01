@@ -45,6 +45,7 @@ public class InfoAccountActivity extends AppCompatActivity {
         email.setText(MainActivity.profil.getEmail());
         date.setText(MainActivity.profil.getBirthDate());
         password.setText(MainActivity.profil.getPassword());
+
         profileImageText.setText(MainActivity.profil.getProfileImage());
 
         File imgFile = new File(MainActivity.profil.getProfileImage());
@@ -53,6 +54,6 @@ public class InfoAccountActivity extends AppCompatActivity {
             Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.toString());
             profileImage.setImageBitmap(myBitmap);
         }
-    }
 
+    }
 }
