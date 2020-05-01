@@ -50,6 +50,8 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class AccountCreationActivity extends AppCompatActivity {
 
@@ -125,8 +127,6 @@ public class AccountCreationActivity extends AppCompatActivity {
 
                     MainActivity.profil.setProfileImage(file.toString());
 
-                    Intent intent = new Intent(AccountCreationActivity.this, MainActivity.class);
-                    startActivity(intent);
 
 
                     try {
@@ -140,9 +140,46 @@ public class AccountCreationActivity extends AppCompatActivity {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    create_account();
 
-                    startActivity(new Intent(AccountCreationActivity.this, MainActivity.class));
+
+                    // Verif info Form
+                    String regexEmail = "^[A-Za-z0-9+_.-]+@(.+)$";
+                    String regexUsername = "^([a-zA-Z]{2,}\\s[a-zA-z]{1,}'?-?[a-zA-Z]{2,}\\s?([a-zA-Z]{1,})?)";
+                    String regexPassword = "(?=^.{8,}$)((?=.*\\d)|(?=.*\\W+))(?![.\\n])(?=.*[A-Z])(?=.*[a-z]).*$";
+                    /*   Password matching expression. Password must be at least 8 characters,
+                    and must include at least one upper case letter, one lower case letter, and one numeric digit or special character.  */
+
+                    Pattern pattern = Pattern.compile(regexEmail);
+                    Pattern patternUsername = Pattern.compile(regexUsername);
+                    Pattern patternPassword = Pattern.compile(regexPassword);
+                    Matcher matcherEmail = pattern.matcher(email.getText().toString().trim());
+                    Matcher matcherUsername = patternUsername.matcher(name.getText().toString().trim());
+                    Matcher matcherPassword = patternPassword.matcher(password.getText().toString().trim());
+
+                    Boolean correctForm = true;
+
+                    if(!matcherEmail.find()) {
+                        Toast.makeText(getApplicationContext(),"Entrez un Email Valide", Toast.LENGTH_SHORT).show();
+                        correctForm = false;
+
+                    }
+                    if(!matcherUsername.find()) {
+                        Toast.makeText(getApplicationContext(),"Entrez un Nom Valide", Toast.LENGTH_SHORT).show();
+                        correctForm = false;
+                    }
+                    if(!matcherPassword.find()) {
+                        Toast.makeText(getApplicationContext(),"Password must be at least 8 characters, " +
+                                "and must include at least one upper case letter, one lower case letter, and one numeric digit or special character.", Toast.LENGTH_LONG).show();
+                        correctForm = false;
+                    }
+
+
+                    if(correctForm) {
+
+                        // correct from : add to the bdd.
+                        create_account();
+                        startActivity(new Intent(AccountCreationActivity.this, loginActivity.class));
+                    }
 
                 }
 
@@ -190,10 +227,10 @@ public class AccountCreationActivity extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 if(response.trim().equals("success")){
-                    //Toast.makeText(getApplicationContext(), "Login success", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "creation success", Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    //Toast.makeText(getApplicationContext(), "Login failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "creation failed", Toast.LENGTH_SHORT).show();
                 }
             }
         }, new Response.ErrorListener() {
@@ -206,7 +243,7 @@ public class AccountCreationActivity extends AppCompatActivity {
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
                 params.put("email", email.getText().toString().trim());
-                params.put("username", email.getText().toString().trim());
+                params.put("username", name.getText().toString().trim());
                 params.put("birthdate", birthDate.getText().toString().trim());
                 params.put("password", password.getText().toString().trim());
                 params.put("uri_picture", "1");

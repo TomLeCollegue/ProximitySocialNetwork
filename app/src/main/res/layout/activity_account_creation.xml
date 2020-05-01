@@ -64,7 +64,7 @@
             android:layout_margin="5dp"
             android:background="@drawable/plaintextstyle"
             android:ems="10"
-            android:hint="Votre date de naissance"
+            android:hint="Votre date de naissance : yyyy/mm/dd"
             android:inputType="date"
             android:padding="15dp" />
 
