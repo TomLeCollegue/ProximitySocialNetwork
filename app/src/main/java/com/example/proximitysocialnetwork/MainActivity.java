@@ -38,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
     private Button logout;
     private TextView name;
     private TextView email;
+    private String mName;
+    private String mEmail;
 
     SessionManager sessionManager;
 
@@ -50,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         sessionManager = new SessionManager(this);
-        sessionManager.checkLoggin();
+
 
         infoAccount = (Button) findViewById(R.id.info_compte);
         searchPeople = (Button) findViewById(R.id.search_people);
@@ -59,10 +61,10 @@ public class MainActivity extends AppCompatActivity {
         logout = (Button) findViewById(R.id.logout);
         name = (TextView) findViewById(R.id.name);
         email = (TextView) findViewById(R.id.email);
-
+        sessionManager.checkLoggin();
         HashMap<String,String > user = sessionManager.getUserDetail();
-        String mName = user.get(sessionManager.NAME);
-        final String mEmail = user.get(sessionManager.EMAIL);
+        mName = user.get(sessionManager.NAME);
+        mEmail = user.get(sessionManager.EMAIL);
 
         if (net == null) {
             net = new NetworkHelper(this, mEmail);

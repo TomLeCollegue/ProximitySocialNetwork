@@ -34,10 +34,11 @@ public class InfoAccountActivity extends AppCompatActivity {
     private static final String TAG = "test" ;
     private TextView name;
     private TextView email;
-    private TextView date;
-    private TextView password;
     private ImageView profileImage;
     private ProgressBar progressDownload;
+
+    SessionManager sessionManager;
+
     Context mContext;
     String urlDownload;
 
@@ -46,32 +47,27 @@ public class InfoAccountActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info_account);
 
+        sessionManager = new SessionManager(this);
+
         mContext = getApplicationContext();
 
         name = findViewById(R.id.name);
         email = findViewById(R.id.email);
-        date = findViewById(R.id.birthdate);
-        password = findViewById(R.id.password);
+
         profileImage = findViewById(R.id.profilePic);
         progressDownload = findViewById(R.id.progressDownload);
 
+        HashMap<String,String > user = sessionManager.getUserDetail();
+        String mName = user.get(sessionManager.NAME);
+        String mEmail = user.get(sessionManager.EMAIL);
 
-        name.setText(MainActivity.profil.getName());
-        email.setText(MainActivity.profil.getEmail());
-        date.setText(MainActivity.profil.getBirthDate());
-        password.setText(MainActivity.profil.getPassword());
-
-
-
-        profileImageText.setText(MainActivity.profil.getProfileImage());
-
-
+        name.setText(mName);
+        email.setText(mEmail);
 
         profileImage.setVisibility(View.GONE);
         progressDownload.setVisibility(View.VISIBLE);
 
-        urlDownload = "http://89.87.13.28:8800/database/proximity_social_network/images/profile_pic_"+MainActivity.profil.getEmail()+".jpg";
-        Log.d(TAG, MainActivity.profil.getEmail());
+        urlDownload = "http://89.87.13.28:8800/database/proximity_social_network/images/profile_pic_"+ mEmail +".jpg";
         downloadProfileImage();
         /*File imgFile = new File(MainActivity.profil.getProfileImage());
         if (imgFile.exists())
@@ -84,7 +80,7 @@ public class InfoAccountActivity extends AppCompatActivity {
     }
 
     public void downloadProfileImage(){
-        Log.d(TAG, MainActivity.profil.getEmail());
+
         RequestQueue requestQueue = Volley.newRequestQueue(mContext);
         ImageRequest request = new ImageRequest(urlDownload, new Response.Listener<Bitmap>() {
             @Override
@@ -112,4 +108,4 @@ public class InfoAccountActivity extends AppCompatActivity {
     }
 
     }
-}
+
