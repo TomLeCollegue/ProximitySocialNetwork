@@ -110,7 +110,7 @@ public class NetworkHelper implements Serializable {
 
                     Toast.makeText(appContext, info.getEndpointName() , Toast.LENGTH_SHORT).show();
                     Log.w("newEndPoint", info.getEndpointName());
-                    
+
                 }
 
                 @Override
@@ -190,7 +190,7 @@ public class NetworkHelper implements Serializable {
                                 @Override
                                 public void onSuccess(Void unusedResult) {
                                     discovering = true;
-                                    Log.d(TAG, "Now discovering endpoint " + MainActivity.profil.getName());
+                                    Log.d(TAG, "Now discovering endpoint " + infoConnection);
 
                                 }
                             })
@@ -211,14 +211,14 @@ public class NetworkHelper implements Serializable {
         if(!advertising) {
             connectionsClient
                     .startAdvertising(
-                            MainActivity.profil.getName(), appContext.getPackageName(), connectionLifecycleCallback,
+                            infoConnection, appContext.getPackageName(), connectionLifecycleCallback,
                             new AdvertisingOptions.Builder().setStrategy(STRATEGY).build())
                     .addOnSuccessListener(
                             new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void unusedResult) {
                                     advertising = true;
-                                    Log.d(TAG, "Now advertising endpoint " + MainActivity.profil.getName());
+                                    Log.d(TAG, "Now advertising endpoint " + infoConnection);
                                 }
                             })
                     .addOnFailureListener(

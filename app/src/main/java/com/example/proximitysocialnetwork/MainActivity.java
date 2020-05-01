@@ -64,10 +64,10 @@ public class MainActivity extends AppCompatActivity {
 
         HashMap<String,String > user = sessionManager.getUserDetail();
         String mName = user.get(sessionManager.NAME);
-        String mEmail = user.get(sessionManager.EMAIL);
+        final String mEmail = user.get(sessionManager.EMAIL);
 
         if (net == null) {
-            net = new NetworkHelper(this);
+            net = new NetworkHelper(this, mEmail);
         }
 
         name.setText(mName);
@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                     net.StopAll();
-                    net = new NetworkHelper(getApplicationContext());
+                    net = new NetworkHelper(getApplicationContext(), mEmail);
                     clientCo.setText("Non connecté");
                 }
         });
