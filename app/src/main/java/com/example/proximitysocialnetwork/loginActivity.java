@@ -20,6 +20,11 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,12 +34,14 @@ public class loginActivity extends AppCompatActivity {
     private EditText email;
     private EditText password;
     private TextView create_account;
+    SessionManager sessionManager;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        sessionManager = new SessionManager(this);
 
         buttonLogin = findViewById(R.id.button_login);
         email = findViewById(R.id.mail_adress);
@@ -60,16 +67,45 @@ public class loginActivity extends AppCompatActivity {
 
     private void Login(){
         String url = "http://89.87.13.28:8800/database/proximity_social_network/php-request/login.php";
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                if(response.trim().equals("success")){
+                try{
+                    JSONObject jsonObject = new JSONObject(response);
+                    String success = jsonObject.getString("success");
+                    JSONArray jsonArray = jsonObject.getJSONArray("login");
+
+                    if (success.equals("1")){
+                        for (int i = 0; i < jsonArray.length(); i++){
+                            JSONObject object = jsonArray.getJSONObject(i);
+
+                            String name = object.getString("name").trim();
+                            String email = object.getString("email").trim();
+
+                            sessionManager.createSession(name,email);
+                            startActivity(new Intent(loginActivity.this, MainActivity.class));
+
+                            //MainActivity.profil = new Profil(name, email, "1999/03/15");
+
+                            Toast.makeText(getApplicationContext(), "Connecté avec succès", Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+                    else{
+                        Toast.makeText(getApplicationContext(), "Connecté avec succès", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                catch (JSONException e){
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), " error " + e.toString(), Toast.LENGTH_SHORT).show();
+                }
+                /* if(response.trim().equals("success")){
                     Toast.makeText(getApplicationContext(), "Login success", Toast.LENGTH_SHORT).show();
                 }
                 else {
                     Toast.makeText(getApplicationContext(), "Login failed", Toast.LENGTH_SHORT).show();
-                }
+                } */
             }
         }, new Response.ErrorListener() {
             @Override
@@ -80,11 +116,12 @@ public class loginActivity extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                params.put("username", email.getText().toString().trim());
+                params.put("email", email.getText().toString().trim());
                 params.put("password", password.getText().toString().trim());
                 return params;
             }
         };
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
     }
 }

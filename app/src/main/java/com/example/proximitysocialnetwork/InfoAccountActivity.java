@@ -62,6 +62,11 @@ public class InfoAccountActivity extends AppCompatActivity {
         password.setText(MainActivity.profil.getPassword());
 
 
+
+        profileImageText.setText(MainActivity.profil.getProfileImage());
+
+
+
         profileImage.setVisibility(View.GONE);
         progressDownload.setVisibility(View.VISIBLE);
 
@@ -106,4 +111,5 @@ public class InfoAccountActivity extends AppCompatActivity {
         finish();
     }
 
+    }
 }

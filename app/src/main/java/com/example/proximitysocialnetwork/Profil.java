@@ -22,6 +22,11 @@ public class Profil implements Serializable {
     private String profileImage;
     private String password;
 
+    public Profil(String name, String email, String birthDate) {
+        this.name = name;
+        this.email = email;
+        this.birthDate = birthDate;
+    }
 
     public String getName() {
         return name;
