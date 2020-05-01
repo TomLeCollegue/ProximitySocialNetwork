@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
@@ -72,6 +73,9 @@ public class AccountCreationActivity extends AppCompatActivity {
     // request code for image
     private static final int PICK_IMAGE = 100;
 
+    Boolean correctForm = true;
+
+
     Context mContext;
     //
     String urlUpload = "http://89.87.13.28:8800/database/proximity_social_network/php-request/upload_image.php";
@@ -98,16 +102,7 @@ public class AccountCreationActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(password.getText().toString().equals(confirmPassword.getText().toString())){
 
-                    MainActivity.profil.setName(name.getText().toString());
-                    MainActivity.profil.setEmail(email.getText().toString());
-                    MainActivity.profil.setBirthDate(birthDate.getText().toString());
-                    MainActivity.profil.setPassword(password.getText().toString());
-
-                    MainActivity.profil.setProfileImage(imageURI.toString());
-
                     //saveToInternalStorage();
-
-                    //startActivity(new Intent(AccountCreationActivity.this, MainActivity.class));
 
                     // Verif info Form
                     String regexEmail = "^[A-Za-z0-9+_.-]+@(.+)$";
@@ -123,8 +118,13 @@ public class AccountCreationActivity extends AppCompatActivity {
                     Matcher matcherUsername = patternUsername.matcher(name.getText().toString().trim());
                     Matcher matcherPassword = patternPassword.matcher(password.getText().toString().trim());
 
-                    Boolean correctForm = true;
-
+                    Bitmap bmapimage = ((BitmapDrawable) profileImage.getDrawable()).getBitmap();
+                    Drawable crossImg = getResources().getDrawable(R.drawable.add_profil_img);
+                    Bitmap bmapcross = ((BitmapDrawable) crossImg).getBitmap();
+                    if(bmapimage.sameAs(bmapcross)){
+                        correctForm = false;
+                        Toast.makeText(getApplicationContext(),"Mettez une photo de profil", Toast.LENGTH_SHORT).show();
+                    }
                     if(!matcherEmail.find()) {
                         Toast.makeText(getApplicationContext(),"Entrez un Email Valide", Toast.LENGTH_SHORT).show();
                         correctForm = false;
@@ -142,7 +142,6 @@ public class AccountCreationActivity extends AppCompatActivity {
 
 
                     if(correctForm) {
-
                         // correct from : add to the bdd.
                         create_account();
                         saveToServer();
@@ -295,7 +294,7 @@ public class AccountCreationActivity extends AppCompatActivity {
                 params.put("username", name.getText().toString().trim());
                 params.put("birthdate", birthDate.getText().toString().trim());
                 params.put("password", password.getText().toString().trim());
-                params.put("uri_picture", "1");
+                params.put("uri_picture", "profile_pic_"+ email.getText().toString());
                 return params;
             }
         };
