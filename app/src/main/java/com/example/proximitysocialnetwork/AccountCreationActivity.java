@@ -147,6 +147,8 @@ public class AccountCreationActivity extends AppCompatActivity {
                     if(correctForm) {
 
                         // correct from : add to the bdd.
+                        MainActivity.profil.setEmail(email.getText().toString());
+                        Log.d(TAG,MainActivity.profil.getEmail());
                         create_account();
                         pd = ProgressDialog.show(AccountCreationActivity.this,"Loading while upload","Please Wait...");
                         saveToServer();
