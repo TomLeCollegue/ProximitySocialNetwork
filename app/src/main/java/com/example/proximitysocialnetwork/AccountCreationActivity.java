@@ -150,14 +150,9 @@ public class AccountCreationActivity extends AppCompatActivity {
                     if(correctForm) {
                         // correct from : add to the bdd.
 
-                        
-                        
-
                         confirmAccount.setVisibility(View.GONE);
                         loading.setVisibility(View.VISIBLE);
-
                         create_account();
-                        pd = ProgressDialog.show(AccountCreationActivity.this,"Loading while upload","Please Wait...");
                         saveToServer();
                     }
 
