@@ -39,6 +39,8 @@ public class NetworkHelper implements Serializable {
     private final ConnectionsClient connectionsClient;
     private String endpointIdClient;
 
+    private String infoConnection;
+
     private static final String[] REQUIRED_PERMISSIONS =
             new String[] {
                     Manifest.permission.BLUETOOTH,
@@ -67,9 +69,9 @@ public class NetworkHelper implements Serializable {
                         e.printStackTrace();
                     }
 
-                    if ( dataReceived instanceof Profil){
+                    /*if ( dataReceived instanceof Profil){
                         MainActivity.profil = (Profil) dataReceived;
-                    }
+                    }*/
 
                 }
 
@@ -84,9 +86,10 @@ public class NetworkHelper implements Serializable {
 
 
 
-    public NetworkHelper(Context appContext) {
+    public NetworkHelper(Context appContext, String infoConnection) {
         this.appContext = appContext;
         this.connectionsClient = Nearby.getConnectionsClient(appContext);
+        this.infoConnection = infoConnection;
     }
 
     public static int getRequestCodeRequiredPermissions() {
@@ -107,17 +110,7 @@ public class NetworkHelper implements Serializable {
 
                     Toast.makeText(appContext, info.getEndpointName() , Toast.LENGTH_SHORT).show();
                     Log.w("newEndPoint", info.getEndpointName());
-
-                    // An endpoint was found. We request a connection to it.
-                    /*Nearby.getConnectionsClient(appContext)
-                            .requestConnection(MainActivity.profil.getName(), endpointId, connectionLifecycleCallback)
-                            .addOnFailureListener(
-                                    new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Log.w(TAG,"requestConnection() failed.", e);
-                                        }
-                                    });*/
+                    
                 }
 
                 @Override

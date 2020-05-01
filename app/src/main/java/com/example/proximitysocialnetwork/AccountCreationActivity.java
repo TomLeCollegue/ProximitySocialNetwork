@@ -275,7 +275,7 @@ public class AccountCreationActivity extends AppCompatActivity {
     }
 
     private void create_account(){
-        String url = "http://89.87.13.28:8800/database/proximity_social_network/php-request/create_account.php";
+        String url = "http://89.87.13.28:8800/database/proximity_social_network/php-request/register.php";
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override

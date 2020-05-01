@@ -21,6 +21,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.HashMap;
 
 import com.example.proximitysocialnetwork.Profil;
 
@@ -29,13 +30,16 @@ public class MainActivity extends AppCompatActivity {
     public static Profil profil;
 
     public static NetworkHelper net;
-    private Button createAccount;
     private Button infoAccount;
     private Button searchPeople;
     private Button sendProfil;
     public static TextView clientCo;
 
-    private Button connection;
+    private Button logout;
+    private TextView name;
+    private TextView email;
+
+    SessionManager sessionManager;
 
 
     @Override
@@ -45,26 +49,34 @@ public class MainActivity extends AppCompatActivity {
 
         //loadProfil();
 
-        if (net == null) {
-            net = new NetworkHelper(this);
-        }
 
 
-        createAccount = (Button) findViewById(R.id.create_account);
+        sessionManager = new SessionManager(this);
+        sessionManager.checkLoggin();
+
         infoAccount = (Button) findViewById(R.id.info_compte);
         searchPeople = (Button) findViewById(R.id.search_people);
         sendProfil = (Button) findViewById(R.id.send_account);
         clientCo = (TextView) findViewById(R.id.client_co);
-        connection = findViewById(R.id.button_co);
+        logout = (Button) findViewById(R.id.logout);
+        name = (TextView) findViewById(R.id.name);
+        email = (TextView) findViewById(R.id.email);
+
+        HashMap<String,String > user = sessionManager.getUserDetail();
+        String mName = user.get(sessionManager.NAME);
+        String mEmail = user.get(sessionManager.EMAIL);
+
+        if (net == null) {
+            net = new NetworkHelper(this);
+        }
+
+        name.setText(mName);
+        email.setText(mEmail);
+
 
 
         // Intent to activities
-        createAccount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, AccountCreationActivity.class));
-            }
-        });
+
         infoAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,12 +84,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        connection.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, loginActivity.class));
-            }
-        });
 
         searchPeople.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,6 +99,13 @@ public class MainActivity extends AppCompatActivity {
                     net = new NetworkHelper(getApplicationContext());
                     clientCo.setText("Non connecté");
                 }
+        });
+
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sessionManager.logout();
+            }
         });
     }
 
