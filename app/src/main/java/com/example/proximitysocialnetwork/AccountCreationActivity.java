@@ -106,8 +106,8 @@ public class AccountCreationActivity extends AppCompatActivity {
                     MainActivity.profil.setProfileImage(imageURI.toString());
 
                     //saveToInternalStorage();
-                    saveToServer();
-                    startActivity(new Intent(AccountCreationActivity.this, MainActivity.class));
+
+                    //startActivity(new Intent(AccountCreationActivity.this, MainActivity.class));
 
                     // Verif info Form
                     String regexEmail = "^[A-Za-z0-9+_.-]+@(.+)$";
@@ -145,6 +145,7 @@ public class AccountCreationActivity extends AppCompatActivity {
 
                         // correct from : add to the bdd.
                         create_account();
+                        saveToServer();
                         startActivity(new Intent(AccountCreationActivity.this, loginActivity.class));
                     }
 
@@ -275,10 +276,10 @@ public class AccountCreationActivity extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 if(response.trim().equals("success")){
-                    Toast.makeText(getApplicationContext(), "creation success", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), "creation success", Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    Toast.makeText(getApplicationContext(), "creation failed", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getApplicationContext(), "creation failed", Toast.LENGTH_SHORT).show();
                 }
             }
         }, new Response.ErrorListener() {
