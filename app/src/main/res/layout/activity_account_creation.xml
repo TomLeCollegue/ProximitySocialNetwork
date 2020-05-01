@@ -42,6 +42,7 @@
             android:layout_margin="5dp"
             android:background="@drawable/plaintextstyle"
             android:ems="10"
+            android:fontFamily="@font/carter_one"
             android:hint="Votre nom"
             android:inputType="textPersonName"
             android:padding="15dp" />

@@ -41,11 +41,14 @@ public class InfoAccountActivity extends AppCompatActivity {
         profileImageText = findViewById(R.id.textUriProfilePic);
         profileImage = findViewById(R.id.profilePic);
 
+        
+
         name.setText(MainActivity.profil.getName());
         email.setText(MainActivity.profil.getEmail());
         date.setText(MainActivity.profil.getBirthDate());
         password.setText(MainActivity.profil.getPassword());
         profileImageText.setText(MainActivity.profil.getProfileImage());
+
 
         File imgFile = new File(MainActivity.profil.getProfileImage());
         if (imgFile.exists())
