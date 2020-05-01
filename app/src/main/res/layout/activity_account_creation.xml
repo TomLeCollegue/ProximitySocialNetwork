@@ -19,6 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
+            android:fontFamily="@font/carter_one"
             android:gravity="center_horizontal|center_vertical"
             android:padding="10dp"
             android:text="Créer un nouveau compte"
@@ -42,7 +43,7 @@
             android:layout_margin="5dp"
             android:background="@drawable/plaintextstyle"
             android:ems="10"
-            android:hint="Votre nom"
+            android:hint="Nom, Prénom"
             android:inputType="textPersonName"
             android:padding="15dp" />
 
@@ -53,7 +54,7 @@
             android:layout_margin="5dp"
             android:background="@drawable/plaintextstyle"
             android:ems="10"
-            android:hint="Votre Email"
+            android:hint="Adresse Mail"
             android:inputType="textEmailAddress"
             android:padding="15dp" />
 
@@ -64,7 +65,7 @@
             android:layout_margin="5dp"
             android:background="@drawable/plaintextstyle"
             android:ems="10"
-            android:hint="Votre date de naissance"
+            android:hint="yyyy/mm/dd"
             android:inputType="date"
             android:padding="15dp" />
 
@@ -84,6 +85,7 @@
             android:inputType="textPassword"
             android:padding="15dp" />
 
+
         <EditText
             android:id="@+id/confirm_password"
             android:layout_width="match_parent"
@@ -94,6 +96,14 @@
             android:hint="Confirmer Mot de passe"
             android:inputType="textPassword"
             android:padding="15dp" />
+
+        <ProgressBar
+            android:id="@+id/progressBar2"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_margin="10dp" />
 
         <Button
             android:id="@+id/button_creation_account"
