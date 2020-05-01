@@ -55,7 +55,10 @@ import java.util.regex.Pattern;
 
 public class AccountCreationActivity extends AppCompatActivity {
 
+    //debug log
     private static final String TAG = "test";
+
+    //View variable names
     private EditText name;
     private EditText email;
     private EditText birthDate;
@@ -63,11 +66,15 @@ public class AccountCreationActivity extends AppCompatActivity {
     private EditText confirmPassword;
     private Button confirmAccount;
     private ImageView profileImage;
-    private Uri imageURI;
-    private static final int PICK_IMAGE = 100;
-    OutputStream outputStream;
-    Context mContext;
 
+    //image view location on phone
+    private Uri imageURI;
+    // request code for image
+    private static final int PICK_IMAGE = 100;
+
+    Context mContext;
+    //
+    String urlUpload = "http://89.87.13.28:8800/database/proximity_social_network/php-request/upload_image.php";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,49 +105,9 @@ public class AccountCreationActivity extends AppCompatActivity {
 
                     MainActivity.profil.setProfileImage(imageURI.toString());
 
-                    BitmapDrawable drawable = (BitmapDrawable) profileImage.getDrawable();
-                    Bitmap bitmap = drawable.getBitmap();
-
-                    String filepath = mContext.getExternalFilesDir(null).getAbsolutePath();
-                    File dir = new File (filepath.replace("/files", "") + "/ProfileImages/");
-                    Log.d(TAG, filepath.replace("/files", ""));
-                    dir.mkdir();
-                    File file = new File (dir, "profile_pic_"+ name.getText().toString().replace(" ","") + ".jpg");
-                    Log.d("test", file.toString());
-                    try{
-                        outputStream = new FileOutputStream(file);
-                    } catch (FileNotFoundException e){
-                        e.printStackTrace();
-                    }
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 35, outputStream);
-
-                    try {
-                        outputStream.flush();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    try {
-                        outputStream.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    MainActivity.profil.setProfileImage(file.toString());
-
-
-
-                    try {
-                        FileOutputStream fos = openFileOutput("profil",Context.MODE_PRIVATE);
-                        ObjectOutputStream oos = new ObjectOutputStream(fos);
-                        // write object to file
-                        oos.writeObject(MainActivity.profil);
-                        // closing resources
-                        oos.close();
-                        fos.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
+                    //saveToInternalStorage();
+                    saveToServer();
+                    startActivity(new Intent(AccountCreationActivity.this, MainActivity.class));
 
                     // Verif info Form
                     String regexEmail = "^[A-Za-z0-9+_.-]+@(.+)$";
@@ -197,6 +164,87 @@ public class AccountCreationActivity extends AppCompatActivity {
             }
         });
 
+    }
+    //if you want to save your profile_image to your internal storage
+    private void saveToInternalStorage(){
+        OutputStream outputStream = null;
+        BitmapDrawable drawable = (BitmapDrawable) profileImage.getDrawable();
+        Bitmap bitmap = new ImageGestion().getBitmapFromDrawable(drawable);
+
+        String filepath = mContext.getExternalFilesDir(null).getAbsolutePath();
+        File dir = new File (filepath.replace("/files", "") + "/ProfileImages/");
+        Log.d(TAG, filepath.replace("/files", ""));
+        dir.mkdir();
+        File file = new File (dir, "profile_pic_"+ name.getText().toString().replace(" ","") + ".jpg");
+        Log.d("test", file.toString());
+        try{
+            outputStream = new FileOutputStream(file);
+        } catch (FileNotFoundException e){
+            e.printStackTrace();
+        }
+        new ImageGestion().compressImageToJpeg(bitmap,35,outputStream);
+
+        try {
+            outputStream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        MainActivity.profil.setProfileImage(file.toString());
+
+        //Intent intent = new Intent(AccountCreationActivity.this, MainActivity.class);
+        //startActivity(intent);
+
+
+        try {
+            FileOutputStream fos = openFileOutput("profil",Context.MODE_PRIVATE);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            // write object to file
+            oos.writeObject(MainActivity.profil);
+            // closing resources
+            oos.close();
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void saveToServer(){
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, urlUpload, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Toast.makeText(AccountCreationActivity.this, response, Toast.LENGTH_SHORT).show();
+            }
+
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(AccountCreationActivity.this, "error: "+ error.toString(), Toast.LENGTH_SHORT).show();
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map <String,String> params = new HashMap<>();
+
+                BitmapDrawable drawable = (BitmapDrawable) profileImage.getDrawable();
+
+                Bitmap myImageBitmap = new ImageGestion().getBitmapFromDrawable(drawable);
+
+                //encodes image to string from base 64
+                String imageEncoded = new ImageGestion().imageToString(myImageBitmap);
+                params.put("name_picture", "profile_pic_"+ email.getText().toString());
+                params.put("profile_picture_test", imageEncoded);
+
+                return params;
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
     }
 
 
