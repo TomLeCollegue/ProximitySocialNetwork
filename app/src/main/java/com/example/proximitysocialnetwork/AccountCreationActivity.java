@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -68,6 +69,7 @@ public class AccountCreationActivity extends AppCompatActivity {
     private EditText confirmPassword;
     private Button confirmAccount;
     private ImageView profileImage;
+
 
     private ProgressBar loading;
 
@@ -147,9 +149,15 @@ public class AccountCreationActivity extends AppCompatActivity {
 
                     if(correctForm) {
                         // correct from : add to the bdd.
+
+                        
+                        
+
                         confirmAccount.setVisibility(View.GONE);
                         loading.setVisibility(View.VISIBLE);
+
                         create_account();
+                        pd = ProgressDialog.show(AccountCreationActivity.this,"Loading while upload","Please Wait...");
                         saveToServer();
                     }
 
@@ -223,8 +231,13 @@ public class AccountCreationActivity extends AppCompatActivity {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, urlUpload, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
+
+                
+                Log.d(TAG, response);
+
                 //Toast.makeText(AccountCreationActivity.this, response, Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(AccountCreationActivity.this, loginActivity.class));
+
             }
 
         }, new Response.ErrorListener() {

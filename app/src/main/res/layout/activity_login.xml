@@ -80,8 +80,9 @@
                 <TextView
                     android:id="@+id/textView5"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Pas de compte ? " />
+                    android:layout_height="match_parent"
+                    android:text="Pas de compte ? "
+                    android:gravity="center"/>
 
                 <TextView
                     android:id="@+id/signup"
