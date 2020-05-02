@@ -3,10 +3,12 @@ package com.example.proximitysocialnetwork;
 import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
-import android.Manifest;
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -19,10 +21,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.util.HashMap;
 
 import com.android.volley.RequestQueue;
@@ -30,9 +30,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.proximitysocialnetwork.Profil;
 
 import static android.graphics.Bitmap.Config.RGB_565;
+import static com.example.proximitysocialnetwork.App.CHANNEL_NEW_PERSON;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView profileImage;
     private String urlDownload;
 
+    private NotificationManagerCompat notificationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,8 +83,11 @@ public class MainActivity extends AppCompatActivity {
         if(sessionManager.isLoggin()) {
             if (net == null) {
              net = new NetworkHelper(this, mEmail);
+             net.setCurrentMainActivity(this);
             }
         }
+
+        notificationManager = NotificationManagerCompat.from(this);
 
         urlDownload = "http://89.87.13.28:8800/database/proximity_social_network/images/profile_pic_"+ mEmail +".jpg";
         downloadProfileImage();
@@ -115,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                     net.StopAll();
                     net = new NetworkHelper(getApplicationContext(), mEmail);
+                    net.setCurrentMainActivity(MainActivity.this);
                     clientCo.setText("Non connecté");
                 }
         });
@@ -215,5 +220,22 @@ public class MainActivity extends AppCompatActivity {
         }
         );
         requestQueue.add(request);
+    }
+
+    public void sendOnChannelNewPerson(String EmailNewPerson){
+
+        Intent activityIntent = new Intent(this,MainActivity.class);
+        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, activityIntent, 0);
+        Notification notification = new NotificationCompat.Builder(this, CHANNEL_NEW_PERSON)
+                .setSmallIcon(R.drawable.add_profil_img)
+                .setContentTitle("Une nouvelle personne decouverte !")
+                .setContentText(  EmailNewPerson + " est/était a proximité")
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setCategory(NotificationCompat.CATEGORY_EVENT)
+                .setContentIntent(contentIntent)
+                .setColor(getResources().getColor(R.color.ColorPrincipale1))
+                .setAutoCancel(true)
+                .build();
+        notificationManager.notify(1, notification);
     }
 }

@@ -2,12 +2,14 @@ package com.example.proximitysocialnetwork;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.NotificationManagerCompat;
 
 import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.nearby.connection.AdvertisingOptions;
@@ -38,8 +40,13 @@ public class NetworkHelper implements Serializable {
     private boolean discovering = false;
     private final ConnectionsClient connectionsClient;
     private String endpointIdClient;
+    private MainActivity currentMainActivity;
 
     private String infoConnection;
+
+    public void setCurrentMainActivity(MainActivity currentMainActivity) {
+        this.currentMainActivity = currentMainActivity;
+    }
 
     private static final String[] REQUIRED_PERMISSIONS =
             new String[] {
@@ -110,6 +117,8 @@ public class NetworkHelper implements Serializable {
 
                     Toast.makeText(appContext, "Detecté a proximité :" + info.getEndpointName() , Toast.LENGTH_SHORT).show();
                     Log.w("newEndPoint", info.getEndpointName());
+
+                    currentMainActivity.sendOnChannelNewPerson(info.getEndpointName());
 
                 }
 
@@ -252,6 +261,8 @@ public class NetworkHelper implements Serializable {
                             }
                         });
     }
+
+
 
 
 }
