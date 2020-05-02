@@ -110,6 +110,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 net.SeachPeople();
+                clientCo.setText("• Visible •");
+                clientCo.setTextColor(getResources().getColor(R.color.ColorGreen));
             }
         });
 
@@ -119,7 +121,8 @@ public class MainActivity extends AppCompatActivity {
                     net.StopAll();
                     net = new NetworkHelper(getApplicationContext(), mEmail);
                     net.setCurrentMainActivity(MainActivity.this);
-                    clientCo.setText("Non connecté");
+                    clientCo.setText("• Invisible •");
+                    clientCo.setTextColor(getResources().getColor(R.color.ColorRed));
                 }
         });
 
@@ -194,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
                 //progressDownload.setVisibility(View.GONE);
                 //Toast.makeText(MainActivity.this, "Profile Image Downloaded Successfully", Toast.LENGTH_LONG).show();
             }
-        }, 700, 700, ImageView.ScaleType.CENTER, RGB_565, new Response.ErrorListener() {
+        }, 0, 0, ImageView.ScaleType.CENTER, RGB_565, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 //progressDownload.setVisibility(View.GONE);

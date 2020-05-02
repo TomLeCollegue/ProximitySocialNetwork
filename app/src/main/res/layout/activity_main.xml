@@ -8,84 +8,108 @@
     android:orientation="vertical"
     android:padding="20dp"
     android:gravity="top|center">
+
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="top">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Accueil"
-            android:textSize="50dp"
-            android:layout_gravity="center"/>
-    </FrameLayout>
+        android:layout_height="match_parent">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="clip_horizontal|center"
-        android:orientation="vertical">
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/profilePic2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="30dp"
-            android:padding="10dp" />
-
-        <TextView
-            android:id="@+id/name"
+        <FrameLayout
+            android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:text="name" />
+            android:gravity="top">
 
-        <TextView
-            android:id="@+id/email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:text="email" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Proximity"
+                android:textSize="50dp" />
+        </FrameLayout>
 
-        <Button
-            android:id="@+id/info_compte"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:background="@drawable/button_style_account_create"
-            android:text="Info Compte" />
+            android:layout_height="match_parent"
+            android:layout_marginTop="50dp"
+            android:gravity="clip_horizontal"
+            android:orientation="vertical">
 
-        <Button
-            android:id="@+id/search_people"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:background="@drawable/button_style_account_create"
-            android:text="Chercher des gens" />
+            <LinearLayout
+                android:id="@+id/layout_imageView"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:orientation="vertical">
 
-        <Button
-            android:id="@+id/send_account"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:background="@drawable/button_style_account_create"
-            android:text="arreter de Chercher" />
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/profilePic2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="30dp"
+                    android:padding="10dp" />
+            </LinearLayout>
 
-        <TextView
-            android:id="@+id/client_co"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal|center_vertical"
-            android:text="Nearby Off" />
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="name"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="email" />
+
+            <TextView
+                android:id="@+id/client_co"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="• Invisible •"
+                android:textColor="@color/ColorRed"
+                android:textSize="18dp" />
+
+            <Button
+                android:id="@+id/search_people"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/button_style_account_create"
+                android:text="Chercher des gens" />
+
+            <Button
+                android:id="@+id/send_account"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/button_style_account_create"
+                android:text="arreter de Chercher" />
+
+            <Button
+                android:id="@+id/info_compte"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:background="@drawable/button_style_account_create"
+                android:text="Info Compte" />
+
+        </LinearLayout>
 
         <Button
             android:id="@+id/logout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_margin="5dp"
+            android:background="@drawable/button_style_account_create"
             android:text="Se deconnecter" />
 
-    </LinearLayout>
+    </FrameLayout>
 
 
 </LinearLayout>
