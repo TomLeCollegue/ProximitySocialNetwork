@@ -43,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
     private Button sendProfil;
     public static TextView clientCo;
 
+    private Button editButton;
+
     private Button logout;
     private TextView name;
     private TextView email;
@@ -72,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
         logout = (Button) findViewById(R.id.logout);
         name = (TextView) findViewById(R.id.name);
         email = (TextView) findViewById(R.id.email);
+        editButton = findViewById(R.id.editAccountButton);
 
         sessionManager.checkLoggin();
         HashMap<String,String > user = sessionManager.getUserDetail();
@@ -125,6 +128,13 @@ public class MainActivity extends AppCompatActivity {
                     clientCo.setText("• Invisible •");
                     clientCo.setTextColor(getResources().getColor(R.color.ColorRed));
                 }
+        });
+
+        editButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, EditAccountActivity.class));
+            }
         });
 
         logout.setOnClickListener(new View.OnClickListener() {

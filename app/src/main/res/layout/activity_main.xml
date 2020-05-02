@@ -99,6 +99,12 @@
                 android:background="@drawable/button_style_account_create"
                 android:text="Info Compte" />
 
+            <Button
+                android:id="@+id/editAccountButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Button" />
+
         </LinearLayout>
 
         <Button
