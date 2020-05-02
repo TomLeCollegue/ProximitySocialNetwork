@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
         logout = (Button) findViewById(R.id.logout);
         name = (TextView) findViewById(R.id.name);
         email = (TextView) findViewById(R.id.email);
+
         sessionManager.checkLoggin();
         HashMap<String,String > user = sessionManager.getUserDetail();
         mName = user.get(sessionManager.NAME);
@@ -175,9 +176,5 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
-    }
-
-    public void onBackPressed(){
-        finish();
     }
 }

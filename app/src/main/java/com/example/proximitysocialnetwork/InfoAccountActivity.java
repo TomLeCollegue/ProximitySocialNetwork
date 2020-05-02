@@ -100,12 +100,5 @@ public class InfoAccountActivity extends AppCompatActivity {
         );
         requestQueue.add(request);
     }
-
-    public void onBackPressed(){
-        Intent intent = new Intent(InfoAccountActivity.this, MainActivity.class);
-        startActivity(intent);
-        finish();
-    }
-
-    }
+}
 
