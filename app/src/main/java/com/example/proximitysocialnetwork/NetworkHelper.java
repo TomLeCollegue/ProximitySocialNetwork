@@ -44,6 +44,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -61,8 +62,23 @@ public class NetworkHelper implements Serializable {
     private String infoConnection;
     private String emailDiscovered;
 
+    private ArrayList<Profil> profilsDiscovered = new ArrayList<>();
+    private boolean onViewDiscovering = false;
+
     public void setCurrentMainActivity(MainActivity currentMainActivity) {
         this.currentMainActivity = currentMainActivity;
+    }
+
+    public boolean isOnViewDiscovering() {
+        return onViewDiscovering;
+    }
+
+    public void setOnViewDiscovering(boolean onViewDiscovering) {
+        this.onViewDiscovering = onViewDiscovering;
+    }
+
+    public ArrayList<Profil> getProfilsDiscovered() {
+        return profilsDiscovered;
     }
 
     private static final String[] REQUIRED_PERMISSIONS =
@@ -132,11 +148,11 @@ public class NetworkHelper implements Serializable {
                 @Override
                 public void onEndpointFound(String endpointId, DiscoveredEndpointInfo info) {
 
-                    Toast.makeText(appContext, "Detecté a proximité :" + info.getEndpointName() , Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(appContext, "Detecté a proximité :" + info.getEndpointName() , Toast.LENGTH_SHORT).show();
                     Log.w("newEndPoint", info.getEndpointName());
 
 
-                    currentMainActivity.sendOnChannelNewPerson(info.getEndpointName());
+
                     newDiscovery(info.getEndpointName());
 
                 }
@@ -302,8 +318,15 @@ public class NetworkHelper implements Serializable {
                             String email = object.getString("email").trim();
                             String uriPicture = object.getString("uri_picture").trim();
 
-                            Toast.makeText(appContext,"decouvert " + email + " " + name + " " + uriPicture, Toast.LENGTH_LONG).show();
+                            //Toast.makeText(appContext,"decouvert " + email + " " + name + " " + uriPicture, Toast.LENGTH_LONG).show();
                             //lancer la vue
+
+                            profilsDiscovered.add(new Profil(name,email,uriPicture));
+                            currentMainActivity.sendOnChannelNewPerson(name);
+                            if(!isOnViewDiscovering()){
+                                Intent intent = new Intent(appContext, PersonDiscoveredActivity.class);
+                                appContext.startActivity(intent);
+                            }
                         }
 
                     }

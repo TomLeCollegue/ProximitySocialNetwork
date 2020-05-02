@@ -214,21 +214,21 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 //progressDownload.setVisibility(View.GONE);
-                Toast.makeText(MainActivity.this, "Error while downloading image", Toast.LENGTH_LONG).show();
+                //Toast.makeText(MainActivity.this, "Error while downloading image", Toast.LENGTH_LONG).show();
             }
         }
         );
         requestQueue.add(request);
     }
 
-    public void sendOnChannelNewPerson(String EmailNewPerson){
+    public void sendOnChannelNewPerson(String NewPerson){
 
         Intent activityIntent = new Intent(this,MainActivity.class);
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, activityIntent, 0);
         Notification notification = new NotificationCompat.Builder(this, App.CHANNEL_NEW_PERSON)
                 .setSmallIcon(R.drawable.add_profil_img)
                 .setContentTitle("Une nouvelle personne decouverte !")
-                .setContentText(  EmailNewPerson + " est/était a proximité")
+                .setContentText( NewPerson + " est à proximité")
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setCategory(NotificationCompat.CATEGORY_EVENT)
                 .setContentIntent(contentIntent)
