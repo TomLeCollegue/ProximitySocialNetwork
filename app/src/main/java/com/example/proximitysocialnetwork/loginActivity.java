@@ -89,7 +89,7 @@ public class loginActivity extends AppCompatActivity {
                             startActivity(new Intent(loginActivity.this, MainActivity.class));
 
 
-                            Toast.makeText(getApplicationContext(), "Connecté avec succès", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getApplicationContext(), "Connecté avec succès", Toast.LENGTH_SHORT).show();
                         }
 
                     }

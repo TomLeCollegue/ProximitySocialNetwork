@@ -5,12 +5,22 @@ import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.util.Log;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationManagerCompat;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.nearby.Nearby;
 import com.google.android.gms.nearby.connection.AdvertisingOptions;
 import com.google.android.gms.nearby.connection.ConnectionInfo;
@@ -28,8 +38,14 @@ import com.google.android.gms.nearby.connection.Strategy;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 import static android.content.ContentValues.TAG;
 
@@ -43,6 +59,7 @@ public class NetworkHelper implements Serializable {
     private MainActivity currentMainActivity;
 
     private String infoConnection;
+    private String emailDiscovered;
 
     public void setCurrentMainActivity(MainActivity currentMainActivity) {
         this.currentMainActivity = currentMainActivity;
@@ -118,7 +135,9 @@ public class NetworkHelper implements Serializable {
                     Toast.makeText(appContext, "Detecté a proximité :" + info.getEndpointName() , Toast.LENGTH_SHORT).show();
                     Log.w("newEndPoint", info.getEndpointName());
 
+
                     currentMainActivity.sendOnChannelNewPerson(info.getEndpointName());
+                    newDiscovery(info.getEndpointName());
 
                 }
 
@@ -263,8 +282,63 @@ public class NetworkHelper implements Serializable {
     }
 
 
+    private void newDiscovery(String newemailDiscovered){
+        emailDiscovered = newemailDiscovered;
+        String url = "http://89.87.13.28:8800/database/proximity_social_network/php-request/newdiscovery.php";
 
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try{
+                    JSONObject jsonObject = new JSONObject(response);
+                    String success = jsonObject.getString("success");
+                    JSONArray jsonArray = jsonObject.getJSONArray("login");
 
+                    if (success.equals("1")){
+                        for (int i = 0; i < jsonArray.length(); i++){
+                            JSONObject object = jsonArray.getJSONObject(i);
+
+                            String name = object.getString("name").trim();
+                            String email = object.getString("email").trim();
+                            String uriPicture = object.getString("uri_picture").trim();
+
+                            Toast.makeText(appContext,"decouvert " + email + " " + name + " " + uriPicture, Toast.LENGTH_LONG).show();
+                            //lancer la vue
+                        }
+
+                    }
+                    else{
+
+                    }
+                }
+                catch (JSONException e){
+                    e.printStackTrace();
+                    Toast.makeText(appContext, " error " + e.toString(), Toast.LENGTH_LONG).show();
+                }
+                /* if(response.trim().equals("success")){
+                    Toast.makeText(getApplicationContext(), "Login success", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "Login failed", Toast.LENGTH_SHORT).show();
+                } */
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(appContext, "error :" + error.toString(), Toast.LENGTH_LONG).show();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("personal_email", infoConnection.trim());
+                params.put("discovered_email", emailDiscovered);
+                return params;
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(appContext);
+        requestQueue.add(stringRequest);
+    }
 }
 
 

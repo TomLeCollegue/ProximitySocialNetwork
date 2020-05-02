@@ -32,7 +32,6 @@ import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.Volley;
 
 import static android.graphics.Bitmap.Config.RGB_565;
-import static com.example.proximitysocialnetwork.App.CHANNEL_NEW_PERSON;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -209,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
                 profileImage.setImageBitmap(response);
                 profileImage.setVisibility(View.VISIBLE);
                 //progressDownload.setVisibility(View.GONE);
-                Toast.makeText(MainActivity.this, "Profile Image Downloaded Successfully", Toast.LENGTH_LONG).show();
+                //Toast.makeText(MainActivity.this, "Profile Image Downloaded Successfully", Toast.LENGTH_LONG).show();
             }
         }, 700, 700, ImageView.ScaleType.CENTER, RGB_565, new Response.ErrorListener() {
             @Override
@@ -226,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
 
         Intent activityIntent = new Intent(this,MainActivity.class);
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, activityIntent, 0);
-        Notification notification = new NotificationCompat.Builder(this, CHANNEL_NEW_PERSON)
+        Notification notification = new NotificationCompat.Builder(this, App.CHANNEL_NEW_PERSON)
                 .setSmallIcon(R.drawable.add_profil_img)
                 .setContentTitle("Une nouvelle personne decouverte !")
                 .setContentText(  EmailNewPerson + " est/était a proximité")
