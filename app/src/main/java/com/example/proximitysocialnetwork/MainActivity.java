@@ -13,6 +13,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView email;
     private String mName;
     private String mEmail;
+    private ImageView editAccountWheel;
 
     SessionManager sessionManager;
     private ImageView profileImage;
@@ -72,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
         logout = (Button) findViewById(R.id.logout);
         name = (TextView) findViewById(R.id.name);
         email = (TextView) findViewById(R.id.email);
+        editAccountWheel = (ImageView) findViewById(R.id.editAccountWheel);
 
         sessionManager.checkLoggin();
         HashMap<String,String > user = sessionManager.getUserDetail();
@@ -95,6 +98,19 @@ public class MainActivity extends AppCompatActivity {
         name.setText(mName);
         email.setText(mEmail);
 
+        editAccountWheel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                name.setPaintFlags(name.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+                Intent intent = new Intent(MainActivity.this, EditAccountActivity.class);
+                startActivity(intent);
+                finish();
+
+            }
+        });
+
+        name.setText(mName);
+        email.setText(mEmail);
 
 
         // Intent to activities

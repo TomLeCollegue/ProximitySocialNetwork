@@ -67,9 +67,7 @@ public class EditAccountActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 editCompte();
-                Intent intentMain = new Intent(EditAccountActivity.this, MainActivity.class);
-                startActivity(intentMain);
-                finish();
+                onBackPressed();
             }
         });
     }
@@ -123,6 +121,13 @@ public class EditAccountActivity extends AppCompatActivity {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
 
+    }
+
+    @Override
+    public void onBackPressed(){
+        Intent intent = new Intent (this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 
 }
