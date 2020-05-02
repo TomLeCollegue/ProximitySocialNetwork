@@ -190,10 +190,10 @@ public class AccountCreationActivity extends AppCompatActivity {
                     if(correctForm) {
                         // correct from : add to the bdd.
 
-                        confirmAccount.setVisibility(View.GONE);
+
                         loading.setVisibility(View.VISIBLE);
                         create_account();
-                        saveToServer();
+                        //saveToServer();
                     }
 
                 }
@@ -251,7 +251,7 @@ public class AccountCreationActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        MainActivity.profil.setProfileImage(file.toString());
+        //MainActivity.profil.setProfileImage(file.toString());
 
         //Intent intent = new Intent(AccountCreationActivity.this, MainActivity.class);
         //startActivity(intent);
@@ -261,7 +261,7 @@ public class AccountCreationActivity extends AppCompatActivity {
             FileOutputStream fos = openFileOutput("profil",Context.MODE_PRIVATE);
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             // write object to file
-            oos.writeObject(MainActivity.profil);
+            //oos.writeObject(MainActivity.profil);
             // closing resources
             oos.close();
             fos.close();
@@ -271,6 +271,7 @@ public class AccountCreationActivity extends AppCompatActivity {
     }
 
     private void saveToServer(){
+        confirmAccount.setVisibility(View.GONE);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, urlUpload, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
@@ -336,11 +337,11 @@ public class AccountCreationActivity extends AppCompatActivity {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                if(response.trim().equals("success")){
-                    //Toast.makeText(getApplicationContext(), "creation success", Toast.LENGTH_SHORT).show();
+                if(response.trim().equals("error")){
+                    Toast.makeText(getApplicationContext(), "Email déjà utilisé", Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    //Toast.makeText(getApplicationContext(), "creation failed", Toast.LENGTH_SHORT).show();
+                    saveToServer();
                 }
             }
         }, new Response.ErrorListener() {

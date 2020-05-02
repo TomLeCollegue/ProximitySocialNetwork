@@ -81,6 +81,10 @@ public class NetworkHelper implements Serializable {
         return profilsDiscovered;
     }
 
+    public void removeFirstProfilDiscovered() {
+        profilsDiscovered.remove(0);
+    }
+
     private static final String[] REQUIRED_PERMISSIONS =
             new String[] {
                     Manifest.permission.BLUETOOTH,

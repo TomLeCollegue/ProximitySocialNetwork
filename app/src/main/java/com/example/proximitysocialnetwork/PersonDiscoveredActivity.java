@@ -2,6 +2,7 @@ package com.example.proximitysocialnetwork;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
@@ -45,6 +46,33 @@ public class PersonDiscoveredActivity extends AppCompatActivity{
 
         downloadProfileImage();
 
+        acceptButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity.net.removeFirstProfilDiscovered();
+                if(MainActivity.net.getProfilsDiscovered().isEmpty()){
+                    startActivity(new Intent(PersonDiscoveredActivity.this, MainActivity.class));
+                    MainActivity.net.setOnViewDiscovering(false);
+                }
+                else{
+                    nextProfil();
+                }
+            }
+        });
+        refuseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity.net.removeFirstProfilDiscovered();
+                if(MainActivity.net.getProfilsDiscovered().isEmpty()){
+                    startActivity(new Intent(PersonDiscoveredActivity.this, MainActivity.class));
+                    MainActivity.net.setOnViewDiscovering(false);
+                }
+                else{
+                   nextProfil();
+                }
+            }
+        });
+
 
 
 
@@ -53,7 +81,7 @@ public class PersonDiscoveredActivity extends AppCompatActivity{
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        MainActivity.net.setOnViewDiscovering(false);
+        MainActivity.net.setOnViewDiscovering(true);
     }
 
     public void downloadProfileImage(){
@@ -75,6 +103,14 @@ public class PersonDiscoveredActivity extends AppCompatActivity{
         }
         );
         requestQueue.add(request);
+    }
+
+    public void nextProfil(){
+        profilePicture.setVisibility(View.INVISIBLE);
+        name.setText(MainActivity.net.getProfilsDiscovered().get(0).getName());
+        urlDownload = "http://89.87.13.28:8800/database/proximity_social_network/images/" + MainActivity.net.getProfilsDiscovered().get(0).getProfileImage() +".jpg";
+        downloadProfileImage();
+
     }
 
 }

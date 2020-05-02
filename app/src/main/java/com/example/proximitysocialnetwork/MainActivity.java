@@ -35,7 +35,7 @@ import static android.graphics.Bitmap.Config.RGB_565;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static Profil profil;
+
 
     public static NetworkHelper net;
     private Button infoAccount;
@@ -183,22 +183,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
-
-    //Recup profil saved on launch
-    public void loadProfil(){
-        try {
-            FileInputStream is = openFileInput("profil");
-            ObjectInputStream ois = new ObjectInputStream(is);
-            profil = (Profil) ois.readObject();
-            ois.close();
-            is.close();
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
     public void downloadProfileImage(){
 
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
@@ -223,7 +207,16 @@ public class MainActivity extends AppCompatActivity {
 
     public void sendOnChannelNewPerson(String NewPerson){
 
-        Intent activityIntent = new Intent(this,MainActivity.class);
+        Intent activityIntentMain = new Intent(this,PersonDiscoveredActivity.class);
+        Intent activityIntentDiscover = new Intent(this,PersonDiscoveredActivity.class);
+        Intent activityIntent;
+        if(net.getProfilsDiscovered().isEmpty()){
+            activityIntent = activityIntentMain;
+        }
+        else{
+            activityIntent = activityIntentDiscover;
+        }
+
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, activityIntent, 0);
         Notification notification = new NotificationCompat.Builder(this, App.CHANNEL_NEW_PERSON)
                 .setSmallIcon(R.drawable.add_profil_img)
