@@ -189,8 +189,7 @@ public class NetworkHelper implements Serializable {
                     switch (result.getStatus().getStatusCode()) {
                         case ConnectionsStatusCodes.STATUS_OK:
                             // We're connected! Can now start sending and receiving data.
-                            endpointIdClient = endpointId;
-                            MainActivity.clientCo.setText("Connecté");
+
                             break;
                         case ConnectionsStatusCodes.STATUS_CONNECTION_REJECTED:
                             // The connection was rejected by one or both sides.
@@ -222,7 +221,6 @@ public class NetworkHelper implements Serializable {
         if (!discovering && !advertising) {
             startAdvertising();
             startDiscovery();
-            MainActivity.clientCo.setText("Cherche...");
         }
     }
 
@@ -322,14 +320,12 @@ public class NetworkHelper implements Serializable {
                             String email = object.getString("email").trim();
                             String uriPicture = object.getString("uri_picture").trim();
 
-                            //Toast.makeText(appContext,"decouvert " + email + " " + name + " " + uriPicture, Toast.LENGTH_LONG).show();
-                            //lancer la vue
+                            Log.d("newEndPoint","decouvert " + email + " " + name + " " + uriPicture );
 
                             profilsDiscovered.add(new Profil(name,email,uriPicture));
                             currentMainActivity.sendOnChannelNewPerson(name);
                             if(!isOnViewDiscovering()){
-                                Intent intent = new Intent(appContext, PersonDiscoveredActivity.class);
-                                appContext.startActivity(intent);
+                                currentMainActivity.intentToDiscoveryAccount();
                             }
                         }
 

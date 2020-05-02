@@ -16,7 +16,9 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,17 +41,15 @@ public class MainActivity extends AppCompatActivity {
 
     public static NetworkHelper net;
     private Button infoAccount;
-    private Button searchPeople;
-    private Button sendProfil;
+
     public static TextView clientCo;
-
     private Button editButton;
-
     private Button logout;
     private TextView name;
     private TextView email;
     private String mName;
     private String mEmail;
+    private Switch switchNetwork;
 
     SessionManager sessionManager;
     private ImageView profileImage;
@@ -63,80 +63,63 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-
+        // ****** Initialisation **********//
         sessionManager = new SessionManager(this);
-
+        notificationManager = NotificationManagerCompat.from(this);
         profileImage = findViewById(R.id.profilePic2);
         infoAccount = (Button) findViewById(R.id.info_compte);
-        searchPeople = (Button) findViewById(R.id.search_people);
-        sendProfil = (Button) findViewById(R.id.send_account);
         clientCo = (TextView) findViewById(R.id.client_co);
         logout = (Button) findViewById(R.id.logout);
         name = (TextView) findViewById(R.id.name);
         email = (TextView) findViewById(R.id.email);
         editButton = findViewById(R.id.editAccountButton);
+        switchNetwork = findViewById(R.id.switch1);
+        switchNetwork.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked == true){
+                    // ******** new Network Helper ********//
+                    net = new NetworkHelper(getApplicationContext(), mEmail);
+                    net.setCurrentMainActivity(MainActivity.this);
+                    // ******* beginning Searching people *****//
+                    net.SeachPeople();
+                    clientCo.setText("• Visible •");
+                    clientCo.setTextColor(getResources().getColor(R.color.ColorGreen));
+                }
+                else{
+                    // **** Stopping discovery ****** //
+                    net.StopAll();
+                    clientCo.setText("• Invisible •");
+                    clientCo.setTextColor(getResources().getColor(R.color.ColorRed));
+                }
+            }
+        });
 
+        // ****** check login for redirection to loginActivity **********//
         sessionManager.checkLoggin();
+
+        // ****** Recup info from session and picture from server *********//
         HashMap<String,String > user = sessionManager.getUserDetail();
         mName = user.get(sessionManager.NAME);
         mEmail = user.get(sessionManager.EMAIL);
-
-
-
-        if(sessionManager.isLoggin()) {
-            if (net == null) {
-             net = new NetworkHelper(this, mEmail);
-             net.setCurrentMainActivity(this);
-            }
-        }
-
-        notificationManager = NotificationManagerCompat.from(this);
-
         urlDownload = "http://89.87.13.28:8800/database/proximity_social_network/images/profile_pic_"+ mEmail +".jpg";
         downloadProfileImage();
-
         name.setText(mName);
         email.setText(mEmail);
 
-
-
-        // Intent to activities
-
+        // *******Listener Intent to activities*********//
         infoAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, InfoAccountActivity.class));
             }
         });
-
-
-        searchPeople.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                net.SeachPeople();
-                clientCo.setText("• Visible •");
-                clientCo.setTextColor(getResources().getColor(R.color.ColorGreen));
-            }
-        });
-
-        sendProfil.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                    net.StopAll();
-                    net = new NetworkHelper(getApplicationContext(), mEmail);
-                    net.setCurrentMainActivity(MainActivity.this);
-                    clientCo.setText("• Invisible •");
-                    clientCo.setTextColor(getResources().getColor(R.color.ColorRed));
-                }
-        });
-
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, EditAccountActivity.class));
             }
         });
-
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -243,5 +226,11 @@ public class MainActivity extends AppCompatActivity {
                 .setAutoCancel(true)
                 .build();
         notificationManager.notify(1, notification);
+    }
+
+    public void intentToDiscoveryAccount(){
+        Intent intent = new Intent(MainActivity.this, PersonDiscoveredActivity.class);
+        startActivity(intent);
+
     }
 }

@@ -22,22 +22,26 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        >
         <activity
             android:name=".EditAccountActivity"
-            android:screenOrientation="sensorPortrait"/>
-        <activity android:name=".loginActivity"
-            android:screenOrientation="sensorPortrait"/>
+            android:screenOrientation="sensorPortrait" />
+        <activity android:name=".LoginActivity"
+            android:screenOrientation="sensorPortrait" />
         <activity android:name=".InfoAccountActivity"
             android:screenOrientation="sensorPortrait"/>
         <activity android:name=".PersonDiscoveredActivity"/>
-        <activity android:name=".MainActivity">
-          android:screenOrientation="sensorPortrait">
+        <activity android:name=".MainActivity"
+            android:screenOrientation="sensorPortrait"
+            android:launchMode="singleInstance">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
         <activity android:name=".AccountCreationActivity"
             android:screenOrientation="sensorPortrait"/>

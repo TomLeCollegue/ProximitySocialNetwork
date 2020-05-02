@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 
-import java.time.Instant;
 import java.util.HashMap;
 
 public class SessionManager {
@@ -37,7 +36,7 @@ public class SessionManager {
 
     public void checkLoggin(){
         if(!this.isLoggin()){
-            Intent i = new Intent(context, loginActivity.class);
+            Intent i = new Intent(context, LoginActivity.class);
             context.startActivity(i);
             ((MainActivity) context).finish();
         }
@@ -54,7 +53,7 @@ public class SessionManager {
     public void logout(){
         editor.clear();
         editor.commit();
-        Intent i = new Intent(context, loginActivity.class);
+        Intent i = new Intent(context, LoginActivity.class);
         context.startActivity(i);
         ((MainActivity) context).finish();
     }
