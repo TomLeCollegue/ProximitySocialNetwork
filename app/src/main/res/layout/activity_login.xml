@@ -42,7 +42,8 @@
                 android:ems="10"
                 android:hint="Adresse mail"
                 android:inputType="textEmailAddress"
-                android:padding="15dp" />
+                android:padding="15dp"
+                android:textColor="@android:color/primary_text_light" />
 
             <EditText
                 android:id="@+id/password"

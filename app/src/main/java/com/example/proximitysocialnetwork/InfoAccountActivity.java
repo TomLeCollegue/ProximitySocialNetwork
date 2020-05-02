@@ -90,7 +90,7 @@ public class InfoAccountActivity extends AppCompatActivity {
                 progressDownload.setVisibility(View.GONE);
                 Toast.makeText(InfoAccountActivity.this, "Profile Image Downloaded Successfully", Toast.LENGTH_LONG).show();
             }
-        }, 0, 0, ImageView.ScaleType.CENTER, RGB_565, new Response.ErrorListener() {
+        }, 500, 500, ImageView.ScaleType.CENTER, RGB_565, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 progressDownload.setVisibility(View.GONE);
