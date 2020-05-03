@@ -108,5 +108,6 @@ public class NetworkService extends Service {
         intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
 
+
     }
 }

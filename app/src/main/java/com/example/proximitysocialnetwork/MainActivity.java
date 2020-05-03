@@ -190,14 +190,6 @@ public class MainActivity extends AppCompatActivity {
         recreate();
     }
 
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-
-    }
-
     // ***** Download and display Image Profile **** //
     public void downloadProfileImage(){
 

@@ -2,6 +2,8 @@ package com.example.proximitysocialnetwork;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -56,6 +58,8 @@ public class PersonDiscoveredActivity extends AppCompatActivity{
                 if(App.profilsDiscovered.isEmpty()){
                     startActivity(new Intent(PersonDiscoveredActivity.this, MainActivity.class));
                     finish();
+                    NotificationManager nManager = ((NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE));
+                    nManager.cancel(2);
                 }
                 else{
                     nextProfil();
@@ -67,10 +71,13 @@ public class PersonDiscoveredActivity extends AppCompatActivity{
             public void onClick(View v) {
                 App.removeFirstProfilDiscovered();
 
+
                 // ***** if there is no more profile to discover ***** //
                 if(App.profilsDiscovered.isEmpty()){
                     startActivity(new Intent(PersonDiscoveredActivity.this, MainActivity.class));
                     finish();
+                    NotificationManager nManager = ((NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE));
+                    nManager.cancel(2);
                 }
                 else{
                    nextProfil();
