@@ -4,67 +4,74 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    android:orientation="vertical"
-    android:padding="20dp"
     android:gravity="top|center"
-    >
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <FrameLayout
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/AlmostWhite"
+        android:elevation="25dp"
+        android:gravity="top"
+        android:padding="8dp">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            app:srcCompat="@mipmap/logo_proximity_round"
+            />
+
+        <ImageView
+            android:id="@+id/notif"
+            android:layout_width="wrap_content"
+            android:layout_height="44dp"
+            android:layout_gravity="right"
+            app:srcCompat="@mipmap/logo_notif_round" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="bottom"
+            android:text="Proximity"
+            android:textSize="25dp" />
+    </FrameLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
-
-        android:layout_height="match_parent">
-
-        <FrameLayout
-            android:id="@+id/title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="top">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Proximity"
-                android:textSize="50dp" />
-        </FrameLayout>
+        android:layout_height="match_parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="50dp"
-            android:gravity="clip_horizontal"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/layout_imageView"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:orientation="vertical">
+                android:layout_height="250dp"
+                android:layout_margin="10dp">
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/profilePic2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:layout_marginTop="30dp"
-                    android:padding="10dp" />
-            </LinearLayout>
+                    android:padding="25dp" />
 
-            <TextView
-                android:id="@+id/name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:text="name"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:text="email" />
+                <ImageView
+                    android:id="@+id/editAccountButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:scaleType="centerInside"
+                    app:srcCompat="@mipmap/logo_pen_edit_round" />
+            </FrameLayout>
 
             <TextView
                 android:id="@+id/client_co"
@@ -84,32 +91,50 @@
                 android:layout_marginBottom="20dp"
                 android:gravity="center_horizontal" />
 
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="name"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="email" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:gravity="clip_horizontal"
+            android:orientation="vertical">
+
             <Button
                 android:id="@+id/info_compte"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="15dp"
                 android:background="@drawable/button_style_account_create"
                 android:text="Info Compte" />
 
             <Button
-                android:id="@+id/editAccountButton"
+                android:id="@+id/logout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
                 android:layout_margin="5dp"
                 android:background="@drawable/button_style_account_create"
-                android:text="Modification profil" />
-
+                android:text="Se deconnecter" />
         </LinearLayout>
-
-        <Button
-            android:id="@+id/logout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_margin="5dp"
-            android:background="@drawable/button_style_account_create"
-            android:text="Se deconnecter" />
 
     </FrameLayout>
 

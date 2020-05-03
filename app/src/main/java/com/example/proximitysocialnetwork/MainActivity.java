@@ -17,6 +17,8 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -46,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private Button infoAccount;
 
     public static TextView clientCo;
-    private Button editButton;
+    private ImageView editButton;
     private Button logout;
     private TextView name;
     private TextView email;
@@ -137,6 +139,8 @@ public class MainActivity extends AppCompatActivity {
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.alpha);
+                editButton.startAnimation(animation);
                 startActivity(new Intent(MainActivity.this, EditAccountActivity.class));
             }
         });

@@ -54,9 +54,9 @@ public class NetworkService extends Service {
 
 
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID_SERVICE)
-                .setContentTitle("Proximity")
+                .setContentTitle("Recherche Activée")
                 .setContentText("Vous êtes Visible")
-                .setSmallIcon(R.drawable.add_profil_img)
+                .setSmallIcon(R.mipmap.logo_proximity_round)
                 .setContentIntent(pendingIntent)
                 .build();
 
@@ -91,7 +91,7 @@ public class NetworkService extends Service {
 
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, activityIntentMain, 0);
         Notification notification = new NotificationCompat.Builder(this, App.CHANNEL_NEW_PERSON)
-                .setSmallIcon(R.drawable.add_profil_img)
+                .setSmallIcon(R.mipmap.logo_proximity_round)
                 .setContentTitle("Une nouvelle personne decouverte !")
                 .setContentText(newPerson + " est à proximité")
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
