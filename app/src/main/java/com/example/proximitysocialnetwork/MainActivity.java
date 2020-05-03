@@ -104,13 +104,12 @@ public class MainActivity extends AppCompatActivity {
                 name.setPaintFlags(name.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
                 Intent intent = new Intent(MainActivity.this, EditAccountActivity.class);
                 startActivity(intent);
+                finish();
 
             }
         });
 
-
         // Intent to activities
-
         infoAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -250,4 +249,5 @@ public class MainActivity extends AppCompatActivity {
                 .build();
         notificationManager.notify(1, notification);
     }
+
 }

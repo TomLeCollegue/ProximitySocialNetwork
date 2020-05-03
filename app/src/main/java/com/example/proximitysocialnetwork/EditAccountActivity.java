@@ -3,11 +3,18 @@ package com.example.proximitysocialnetwork;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,9 +41,18 @@ public class EditAccountActivity extends AppCompatActivity {
 
     private String mName;
     private String mEmail;
+
+    //image view location on phone
+    private Uri imageURI;
+    // request code for image
+    private static final int PICK_IMAGE = 100;
+
+    private ImageView editProfileImage;
     private ProgressBar progressEdit;
     private Button btnEditAccount;
     private static final String TAG = "test";
+
+    String urlUpload = "http://89.87.13.28:8800/database/proximity_social_network/php-request/upload_image.php";
 
     String urlEdit = "http://89.87.13.28:8800/database/proximity_social_network/php-request/updateAccount.php";
 
@@ -53,6 +69,8 @@ public class EditAccountActivity extends AppCompatActivity {
         btnEditAccount = (Button) findViewById(R.id.btnEditAccount);
         progressEdit = (ProgressBar) findViewById(R.id.progressEditAcc);
 
+        editProfileImage = (ImageView) findViewById(R.id.profile_image_edit);
+
         sessionManager = new SessionManager(this);
         sessionManager.checkLoggin();
         HashMap<String,String > user = sessionManager.getUserDetail();
@@ -63,18 +81,28 @@ public class EditAccountActivity extends AppCompatActivity {
         name.setHint(mName);
         progressEdit.setVisibility(View.GONE);
 
+        editProfileImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.alpha);
+                editProfileImage.startAnimation(animation);
+                openGallery();
+            }
+        });
+
+
         btnEditAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editCompte();
+                editNameDescription();
+                editProfilePicture();
                 sessionManager.createSession(name.getText().toString(), mEmail);
-                startActivity(new Intent(EditAccountActivity.this, MainActivity.class));
-                finish();
+                onBackPressed();
             }
         });
     }
 
-    private void editCompte(){
+    private void editNameDescription(){
         progressEdit.setVisibility(View.VISIBLE);
         btnEditAccount.setVisibility(View.GONE);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, urlEdit,
@@ -122,6 +150,55 @@ public class EditAccountActivity extends AppCompatActivity {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
 
+    }
+
+    public void editProfilePicture(){
+            btnEditAccount.setVisibility(View.GONE);
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, urlUpload, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    Log.d(TAG, response);
+                    Toast.makeText(EditAccountActivity.this, "Profile Modified Successfully", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(AccountCreationActivity.this, response, Toast.LENGTH_SHORT).show();
+                }
+
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(EditAccountActivity.this, "error: "+ error.toString(), Toast.LENGTH_SHORT).show();
+                }
+            }){
+                @Override
+                protected Map<String, String> getParams() throws AuthFailureError {
+                    Map <String,String> params = new HashMap<>();
+
+                    BitmapDrawable drawable = (BitmapDrawable) editProfileImage.getDrawable();
+                    Bitmap myImageBitmap = new ImageGestion().getBitmapFromDrawable(drawable);
+
+                    //encodes image to string from base 64
+                    String imageEncoded = new ImageGestion().imageToString(myImageBitmap);
+                    params.put("name_picture", "profile_pic_"+ mEmail);
+                    params.put("profile_picture_test", imageEncoded);
+
+                    return params;
+                }
+            };
+            RequestQueue requestQueue = Volley.newRequestQueue(this);
+            requestQueue.add(stringRequest);
+    }
+
+    private void openGallery() {
+        Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+        startActivityForResult(gallery, PICK_IMAGE);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode == RESULT_OK && requestCode == PICK_IMAGE){
+            imageURI = data.getData();
+            editProfileImage.setImageURI(imageURI);
+        }
     }
 
     @Override

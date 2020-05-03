@@ -88,13 +88,13 @@ public class InfoAccountActivity extends AppCompatActivity {
                 profileImage.setImageBitmap(response);
                 profileImage.setVisibility(View.VISIBLE);
                 progressDownload.setVisibility(View.GONE);
-                Toast.makeText(InfoAccountActivity.this, "Profile Image Downloaded Successfully", Toast.LENGTH_LONG).show();
+                Toast.makeText(InfoAccountActivity.this, "Profile Image Downloaded Successfully", Toast.LENGTH_SHORT).show();
             }
         }, 500, 500, ImageView.ScaleType.CENTER, RGB_565, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 progressDownload.setVisibility(View.GONE);
-                Toast.makeText(InfoAccountActivity.this, "Error while downloading image", Toast.LENGTH_LONG).show();
+                Toast.makeText(InfoAccountActivity.this, "Error while downloading image", Toast.LENGTH_SHORT).show();
             }
         }
         );
