@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-    public static NetworkHelper net;
+    public NetworkHelper netMain;
     private Button infoAccount;
 
     public static TextView clientCo;
@@ -74,23 +74,39 @@ public class MainActivity extends AppCompatActivity {
         email = (TextView) findViewById(R.id.email);
         editButton = findViewById(R.id.editAccountButton);
         switchNetwork = findViewById(R.id.switch1);
+
+        // ****** check if the network is running or not ******** //
+        if(NetworkService.isInstanceCreated()){
+            switchNetwork.setChecked(true);
+            clientCo.setText("• Visible •");
+            clientCo.setTextColor(getResources().getColor(R.color.ColorGreen));
+        }
+
+        // **** switch online Offline *** //
         switchNetwork.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked == true){
                     // ******** new Network Helper ********//
-                    net = new NetworkHelper(getApplicationContext(), mEmail);
-                    net.setCurrentMainActivity(MainActivity.this);
+                    //net = new NetworkHelper(getApplicationContext(), mEmail);
+                    //net.setCurrentMainActivity(MainActivity.this);
                     // ******* beginning Searching people *****//
-                    net.SeachPeople();
+                    //net.SeachPeople();
                     clientCo.setText("• Visible •");
                     clientCo.setTextColor(getResources().getColor(R.color.ColorGreen));
+
+                    // **** Start the service ***** //
+                    startService();
                 }
                 else{
                     // **** Stopping discovery ****** //
-                    net.StopAll();
+                    //net.StopAll();
                     clientCo.setText("• Invisible •");
                     clientCo.setTextColor(getResources().getColor(R.color.ColorRed));
+
+                    // **** Stop the service ***** //
+                    stopService();
+
                 }
             }
         });
@@ -106,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
         downloadProfileImage();
         name.setText(mName);
         email.setText(mEmail);
+
 
         // *******Listener Intent to activities*********//
         infoAccount.setOnClickListener(new View.OnClickListener() {
@@ -124,43 +141,32 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 sessionManager.logout();
+                stopService();
             }
         });
     }
 
 
 
-        @Override
-        protected void onStart()
-        {
-            super.onStart();
-            if (!hasPermissions(this, NetworkHelper.getRequiredPermissions())) {
-                requestPermissions(NetworkHelper.getRequiredPermissions(), net.getRequestCodeRequiredPermissions());
+    // ****** Gestion Permission ****** //
+    @Override
+    protected void onStart()
+    {
+        super.onStart();
+        if (!hasPermissions(this, NetworkHelper.getRequiredPermissions())) {
+            requestPermissions(NetworkHelper.getRequiredPermissions(), netMain.getRequestCodeRequiredPermissions());
+        }
+    }
+    private static boolean hasPermissions(Context context, String... permissions) {
+        for (String permission : permissions) {
+            if (ContextCompat.checkSelfPermission(context, permission)
+                    != PackageManager.PERMISSION_GRANTED) {
+                return false;
             }
         }
+        return true;
+    }
 
-        /**
-         * Check permissions status for the application
-         * @param context
-         * @param permissions
-         * @return boolean
-         */
-        private static boolean hasPermissions(Context context, String... permissions) {
-            for (String permission : permissions) {
-                if (ContextCompat.checkSelfPermission(context, permission)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-    /**
-     * Request needed permissions to user through UI
-     * @param requestCode
-     * @param permissions
-     * @param grantResults
-     */
     @CallSuper
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -180,6 +186,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        NetworkService.instanceMainActivity = null;
+    }
+
+    // ***** Download and display Image Profile **** //
     public void downloadProfileImage(){
 
         RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
@@ -202,35 +215,18 @@ public class MainActivity extends AppCompatActivity {
         requestQueue.add(request);
     }
 
-    public void sendOnChannelNewPerson(String NewPerson){
 
-        Intent activityIntentMain = new Intent(this,PersonDiscoveredActivity.class);
-        Intent activityIntentDiscover = new Intent(this,PersonDiscoveredActivity.class);
-        Intent activityIntent;
-        if(net.getProfilsDiscovered().isEmpty()){
-            activityIntent = activityIntentMain;
-        }
-        else{
-            activityIntent = activityIntentDiscover;
-        }
-
-        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, activityIntent, 0);
-        Notification notification = new NotificationCompat.Builder(this, App.CHANNEL_NEW_PERSON)
-                .setSmallIcon(R.drawable.add_profil_img)
-                .setContentTitle("Une nouvelle personne decouverte !")
-                .setContentText( NewPerson + " est à proximité")
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setCategory(NotificationCompat.CATEGORY_EVENT)
-                .setContentIntent(contentIntent)
-                .setColor(getResources().getColor(R.color.ColorPrincipale1))
-                .setAutoCancel(true)
-                .build();
-        notificationManager.notify(1, notification);
+    // ******** START AND STOP netWork Service ******** //
+    public void startService() {
+        Intent serviceIntent = new Intent(this, NetworkService.class);
+        ContextCompat.startForegroundService(this, serviceIntent);
+        NetworkService.instanceMainActivity = this;
     }
 
-    public void intentToDiscoveryAccount(){
-        Intent intent = new Intent(MainActivity.this, PersonDiscoveredActivity.class);
-        startActivity(intent);
 
+    public void stopService() {
+        Intent serviceIntent = new Intent(this, NetworkService.class);
+        stopService(serviceIntent);
     }
+
 }

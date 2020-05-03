@@ -33,6 +33,7 @@ public class PersonDiscoveredActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_person_discovered);
+        /*
 
         // ******** Initialisation ********* //
         profilePicture = findViewById(R.id.profile_picture);
@@ -120,7 +121,7 @@ public class PersonDiscoveredActivity extends AppCompatActivity{
         profilePicture.setVisibility(View.INVISIBLE);
         name.setText(MainActivity.net.getProfilsDiscovered().get(0).getName());
         urlDownload = "http://89.87.13.28:8800/database/proximity_social_network/images/" + MainActivity.net.getProfilsDiscovered().get(0).getProfileImage() +".jpg";
-        downloadProfileImage();
+        downloadProfileImage();  */
 
     }
 
