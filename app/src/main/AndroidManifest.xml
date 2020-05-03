@@ -51,6 +51,7 @@
             android:resource="@array/preloaded_fonts" />
 
             <service android:name=".NetworkService" />
+        <service android:name=".OnclearFromRecentService" android:stopWithTask="false" />
     </application>
 
 </manifest>

@@ -33,7 +33,7 @@ public class PersonDiscoveredActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_person_discovered);
-        /*
+
 
         // ******** Initialisation ********* //
         profilePicture = findViewById(R.id.profile_picture);
@@ -41,11 +41,9 @@ public class PersonDiscoveredActivity extends AppCompatActivity{
         refuseButton = findViewById(R.id.refuse_button);
         name = findViewById(R.id.name);
 
-        // ******* We are watching new people ****** //
-        MainActivity.net.setOnViewDiscovering(true);
 
         // ******* We are looking the oldest person discovered ******** //
-        Profil profil = MainActivity.net.getProfilsDiscovered().get(0);
+        Profil profil = App.profilsDiscovered.get(0);
         urlDownload = "http://89.87.13.28:8800/database/proximity_social_network/images/" + profil.getProfileImage() +".jpg";
         name.setText(profil.getName());
         downloadProfileImage();
@@ -53,15 +51,11 @@ public class PersonDiscoveredActivity extends AppCompatActivity{
         acceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainActivity.net.removeFirstProfilDiscovered();
-
+                App.removeFirstProfilDiscovered();
                 // ***** if there is no more profile to discover ***** //
-                if(MainActivity.net.getProfilsDiscovered().isEmpty()){
+                if(App.profilsDiscovered.isEmpty()){
                     startActivity(new Intent(PersonDiscoveredActivity.this, MainActivity.class));
                     finish();
-
-                    // ******* we are not watching account anymore ****** //
-                    MainActivity.net.setOnViewDiscovering(false);
                 }
                 else{
                     nextProfil();
@@ -71,15 +65,12 @@ public class PersonDiscoveredActivity extends AppCompatActivity{
         refuseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainActivity.net.removeFirstProfilDiscovered();
+                App.removeFirstProfilDiscovered();
 
                 // ***** if there is no more profile to discover ***** //
-                if(MainActivity.net.getProfilsDiscovered().isEmpty()){
+                if(App.profilsDiscovered.isEmpty()){
                     startActivity(new Intent(PersonDiscoveredActivity.this, MainActivity.class));
                     finish();
-
-                    // ******* we are not watching account anymore ****** //
-                    MainActivity.net.setOnViewDiscovering(false);
                 }
                 else{
                    nextProfil();
@@ -95,7 +86,6 @@ public class PersonDiscoveredActivity extends AppCompatActivity{
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        MainActivity.net.setOnViewDiscovering(true);
     }
 
     public void downloadProfileImage(){
@@ -105,7 +95,6 @@ public class PersonDiscoveredActivity extends AppCompatActivity{
             public void onResponse(Bitmap response) {
                 profilePicture.setImageBitmap(response);
                 profilePicture.setVisibility(View.VISIBLE);
-                //Toast.makeText(MainActivity.this, "Profile Image Downloaded Successfully", Toast.LENGTH_LONG).show();
             }
         }, 0, 0, ImageView.ScaleType.CENTER, RGB_565, new Response.ErrorListener() {
             @Override
@@ -119,9 +108,9 @@ public class PersonDiscoveredActivity extends AppCompatActivity{
 
     public void nextProfil(){
         profilePicture.setVisibility(View.INVISIBLE);
-        name.setText(MainActivity.net.getProfilsDiscovered().get(0).getName());
-        urlDownload = "http://89.87.13.28:8800/database/proximity_social_network/images/" + MainActivity.net.getProfilsDiscovered().get(0).getProfileImage() +".jpg";
-        downloadProfileImage();  */
+        name.setText(App.profilsDiscovered.get(0).getName());
+        urlDownload = "http://89.87.13.28:8800/database/proximity_social_network/images/" + App.profilsDiscovered.get(0).getProfileImage() +".jpg";
+        downloadProfileImage();
 
     }
 

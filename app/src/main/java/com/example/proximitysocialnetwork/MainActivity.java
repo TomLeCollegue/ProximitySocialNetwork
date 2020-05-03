@@ -7,7 +7,9 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
+import android.app.ActivityManager;
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -26,6 +28,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.HashMap;
+import java.util.List;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -61,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        startService(new Intent(getBaseContext(), OnclearFromRecentService.class));
 
         // ****** Initialisation **********//
         sessionManager = new SessionManager(this);
@@ -142,6 +145,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 sessionManager.logout();
                 stopService();
+                NotificationManager nManager = ((NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE));
+                nManager.cancelAll();
             }
         });
     }
@@ -189,7 +194,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        NetworkService.instanceMainActivity = null;
+
+
     }
 
     // ***** Download and display Image Profile **** //
@@ -228,5 +234,6 @@ public class MainActivity extends AppCompatActivity {
         Intent serviceIntent = new Intent(this, NetworkService.class);
         stopService(serviceIntent);
     }
+
 
 }

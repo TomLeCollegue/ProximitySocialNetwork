@@ -226,9 +226,6 @@ public class NetworkHelper implements Serializable {
                         }
 
                     }
-                    else{
-
-                    }
                 }
                 catch (JSONException e){
                     e.printStackTrace();

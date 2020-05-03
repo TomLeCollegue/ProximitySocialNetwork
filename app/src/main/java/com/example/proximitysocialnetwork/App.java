@@ -3,6 +3,7 @@ package com.example.proximitysocialnetwork;
 import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Context;
 import android.os.Build;
 
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ public class App extends Application {
         return profilsDiscovered;
     }
 
-    public void removeFirstProfilDiscovered() {
+    public static void removeFirstProfilDiscovered() {
         profilsDiscovered.remove(0);
     }
 
@@ -52,6 +53,6 @@ public class App extends Application {
             manager.createNotificationChannel(serviceChannel);
         }
 
-
     }
+
 }

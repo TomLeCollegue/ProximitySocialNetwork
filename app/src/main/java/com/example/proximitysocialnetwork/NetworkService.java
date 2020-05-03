@@ -1,8 +1,10 @@
 package com.example.proximitysocialnetwork;
 
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
@@ -13,6 +15,7 @@ import androidx.core.app.NotificationManagerCompat;
 
 import java.util.HashMap;
 
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 import static com.example.proximitysocialnetwork.App.CHANNEL_ID_SERVICE;
 
 public class NetworkService extends Service {
@@ -84,7 +87,7 @@ public class NetworkService extends Service {
 
     // ******* notif called for person nearby ***** //
     public void sendNotificationNewPerson(String newPerson){
-        Intent activityIntentMain = new Intent(this,MainActivity.class);
+        Intent activityIntentMain = new Intent(this,PersonDiscoveredActivity.class);
 
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, activityIntentMain, 0);
         Notification notification = new NotificationCompat.Builder(this, App.CHANNEL_NEW_PERSON)
@@ -102,6 +105,7 @@ public class NetworkService extends Service {
 
     public void intentToDiscoveryAccount(){
         Intent intent = new Intent(this, PersonDiscoveredActivity.class);
+        intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
 
     }
