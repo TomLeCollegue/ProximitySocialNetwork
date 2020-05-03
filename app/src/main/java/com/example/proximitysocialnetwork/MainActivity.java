@@ -104,13 +104,9 @@ public class MainActivity extends AppCompatActivity {
                 name.setPaintFlags(name.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
                 Intent intent = new Intent(MainActivity.this, EditAccountActivity.class);
                 startActivity(intent);
-                finish();
 
             }
         });
-
-        name.setText(mName);
-        email.setText(mEmail);
 
 
         // Intent to activities
@@ -150,8 +146,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
-
+        // try with that to resume MainActivity
+        @Override
+        public void onResume(){
+            super.onResume();
+            name.setText(mName);
+        }
 
         @Override
         protected void onStart()

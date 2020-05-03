@@ -67,7 +67,9 @@ public class EditAccountActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 editCompte();
-                onBackPressed();
+                sessionManager.createSession(name.getText().toString(), mEmail);
+                startActivity(new Intent(EditAccountActivity.this, MainActivity.class));
+                finish();
             }
         });
     }
@@ -92,7 +94,6 @@ public class EditAccountActivity extends AppCompatActivity {
                             if(success.equals("1")){
                                 Log.d(TAG, "je suis dans la réponse si succes");
                                 Toast.makeText(EditAccountActivity.this, "Nom modifié !", Toast.LENGTH_SHORT).show();
-                                sessionManager.createSession(name.getText().toString(), mEmail);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -125,8 +126,7 @@ public class EditAccountActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed(){
-        Intent intent = new Intent (this, MainActivity.class);
-        startActivity(intent);
+        startActivity(new Intent(this, MainActivity.class));
         finish();
     }
 
