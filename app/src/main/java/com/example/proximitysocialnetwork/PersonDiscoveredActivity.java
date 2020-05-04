@@ -53,10 +53,11 @@ public class PersonDiscoveredActivity extends AppCompatActivity{
         acceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                App.removeFirstProfilDiscovered();
+                App.removeFirstProfilDiscovered(0);
                 // ***** if there is no more profile to discover ***** //
                 if(App.profilsDiscovered.isEmpty()){
                     startActivity(new Intent(PersonDiscoveredActivity.this, MainActivity.class));
+                    MainActivity.UpdateNotifNumber();
                     finish();
                     NotificationManager nManager = ((NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE));
                     nManager.cancel(2);
@@ -69,12 +70,13 @@ public class PersonDiscoveredActivity extends AppCompatActivity{
         refuseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                App.removeFirstProfilDiscovered();
+                App.removeFirstProfilDiscovered(0);
 
 
                 // ***** if there is no more profile to discover ***** //
                 if(App.profilsDiscovered.isEmpty()){
                     startActivity(new Intent(PersonDiscoveredActivity.this, MainActivity.class));
+                    MainActivity.UpdateNotifNumber();
                     finish();
                     NotificationManager nManager = ((NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE));
                     nManager.cancel(2);
@@ -93,6 +95,7 @@ public class PersonDiscoveredActivity extends AppCompatActivity{
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        MainActivity.UpdateNotifNumber();
     }
 
     public void downloadProfileImage(){

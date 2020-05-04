@@ -5,6 +5,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Build;
+import android.util.Pair;
 
 import java.util.ArrayList;
 
@@ -20,8 +21,8 @@ public class App extends Application {
         return profilsDiscovered;
     }
 
-    public static void removeFirstProfilDiscovered() {
-        profilsDiscovered.remove(0);
+    public static void removeFirstProfilDiscovered(int position) {
+        profilsDiscovered.remove(position);
     }
 
     public static void clearProfilsDiscoveredOffline(){

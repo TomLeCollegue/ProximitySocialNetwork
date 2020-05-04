@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ActivityManager;
 import android.app.Notification;
@@ -19,12 +21,17 @@ import android.graphics.Bitmap;
 import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.Pair;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,6 +53,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.proximitysocialnetwork.adapters.AdapterNotif;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -55,10 +63,10 @@ import org.json.JSONObject;
 
 import static android.graphics.Bitmap.Config.RGB_565;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AdapterNotif.OnItemClickListener{
 
 
-
+    private PopupWindow popUpNotif;
     public NetworkHelper netMain;
     private Button infoAccount;
 
@@ -70,10 +78,15 @@ public class MainActivity extends AppCompatActivity {
     private String mName;
     private String mEmail;
     private Switch switchNetwork;
+    public static TextView textNotifNumber;
 
     SessionManager sessionManager;
     private ImageView profileImage;
     private String urlDownload;
+    private ImageView notif_button;
+
+    private AdapterNotif MyAdapter;
+    private RecyclerView rc;
 
     private NotificationManagerCompat notificationManager;
 
@@ -94,6 +107,8 @@ public class MainActivity extends AppCompatActivity {
         email = (TextView) findViewById(R.id.email);
         editButton = findViewById(R.id.editAccountButton);
         switchNetwork = findViewById(R.id.switch1);
+        notif_button = findViewById(R.id.notif);
+        textNotifNumber = findViewById(R.id.text_notif_number);
 
         // ****** check if the network is running or not ******** //
         if(NetworkService.isInstanceCreated()){
@@ -159,6 +174,14 @@ public class MainActivity extends AppCompatActivity {
                 stopService();
                 NotificationManager nManager = ((NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE));
                 nManager.cancelAll();
+            }
+        });
+
+
+        notif_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                displayPopUp(v);
             }
         });
     }
@@ -260,6 +283,10 @@ public class MainActivity extends AppCompatActivity {
                 newDiscovery(profilesTocheck.get(i));
             }
         }
+        textNotifNumber.setText(App.profilsDiscovered.size()+"");
+        if (App.profilsDiscovered.size() == 0){
+            textNotifNumber.setVisibility(View.INVISIBLE);
+        }
     }
 
 
@@ -314,6 +341,62 @@ public class MainActivity extends AppCompatActivity {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
     }
+
+
+    public void displayPopUp(View v){
+        LayoutInflater inflater = (LayoutInflater)
+                getSystemService(LAYOUT_INFLATER_SERVICE);
+        View popUpView = inflater.inflate(R.layout.popup_notif, null);
+
+        TextView noNotif = popUpView.findViewById(R.id.text_no_notif);
+        LinearLayout mainLayout = popUpView.findViewById(R.id.layout_main);
+        rc = popUpView.findViewById(R.id.recycler_view_notif);
+        rc.setLayoutManager(new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false));
+
+        if(App.profilsDiscovered.size() > 0){
+            noNotif.setVisibility(View.INVISIBLE);
+        }
+        MyAdapter = new AdapterNotif(App.profilsDiscovered);
+        rc.setAdapter(MyAdapter);
+        MyAdapter.setonItemClickListener(MainActivity.this);
+
+
+        int width = LinearLayout.LayoutParams.MATCH_PARENT;
+        int height = LinearLayout.LayoutParams.MATCH_PARENT;
+        boolean focusable = true;
+        popUpNotif = new PopupWindow(popUpView, width, height, focusable);
+
+        popUpNotif.showAtLocation(v, Gravity.CENTER, 0, 0);
+
+        mainLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popUpNotif.dismiss();
+            }
+        });
+
+
+    }
+
+
+    // ****** Listener RecyclerView **** //
+    public void onItemClick(int position) {
+        Intent intent = new Intent(MainActivity.this, PersonDiscoveredActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    public static void UpdateNotifNumber(){
+        textNotifNumber.setText(App.profilsDiscovered.size()+"");
+        if (App.profilsDiscovered.size() == 0){
+            textNotifNumber.setVisibility(View.INVISIBLE);
+        }
+        else{
+            textNotifNumber.setVisibility(View.VISIBLE);
+        }
+    }
+
+
 
 
 }
