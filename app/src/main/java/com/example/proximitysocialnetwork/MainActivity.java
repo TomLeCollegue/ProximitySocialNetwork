@@ -356,7 +356,7 @@ public class MainActivity extends AppCompatActivity implements AdapterNotif.OnIt
         if(App.profilsDiscovered.size() > 0){
             noNotif.setVisibility(View.INVISIBLE);
         }
-        MyAdapter = new AdapterNotif(App.profilsDiscovered);
+        MyAdapter = new AdapterNotif(App.profilsDiscovered, getApplicationContext());
         rc.setAdapter(MyAdapter);
         MyAdapter.setonItemClickListener(MainActivity.this);
 
@@ -383,7 +383,7 @@ public class MainActivity extends AppCompatActivity implements AdapterNotif.OnIt
     public void onItemClick(int position) {
         Intent intent = new Intent(MainActivity.this, PersonDiscoveredActivity.class);
         startActivity(intent);
-        finish();
+        popUpNotif.dismiss();
     }
 
     public static void UpdateNotifNumber(){

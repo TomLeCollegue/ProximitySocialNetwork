@@ -96,6 +96,7 @@ public class PersonDiscoveredActivity extends AppCompatActivity{
     public void onBackPressed() {
         super.onBackPressed();
         MainActivity.UpdateNotifNumber();
+        startActivity(new Intent(PersonDiscoveredActivity.this, MainActivity.class));
     }
 
     public void downloadProfileImage(){
