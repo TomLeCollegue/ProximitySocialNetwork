@@ -236,7 +236,7 @@ public class NetworkHelper implements Serializable {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(appContext, "error :" + error.toString(), Toast.LENGTH_LONG).show();
+                Toast.makeText(appContext, "Nouvelle personne dévouverte hors connexion", Toast.LENGTH_LONG).show();
                 currentNetworkService.sessionManager.AddNewPersonOffline(emailDiscovered);
 
             }

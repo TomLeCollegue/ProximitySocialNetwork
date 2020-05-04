@@ -63,7 +63,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:scaleType="centerCrop"
-                android:visibility="visible"
+                android:visibility="invisible"
                 app:srcCompat="@drawable/add_profil_img" />
 
             <LinearLayout
