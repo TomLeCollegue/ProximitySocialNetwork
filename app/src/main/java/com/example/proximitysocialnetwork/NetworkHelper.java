@@ -55,34 +55,18 @@ public class NetworkHelper implements Serializable {
     private Context appContext;
     private boolean advertising = false;
     private boolean discovering = false;
+
     private final ConnectionsClient connectionsClient;
-    private String endpointIdClient;
-    private MainActivity currentMainActivity;
 
     private String infoConnection;
     private String emailDiscovered;
 
-    private ArrayList<Profil> profilsDiscovered = new ArrayList<>();
-    private boolean onViewDiscovering = false;
+    private NetworkService currentNetworkService;
 
-    public void setCurrentMainActivity(MainActivity currentMainActivity) {
-        this.currentMainActivity = currentMainActivity;
-    }
 
-    public boolean isOnViewDiscovering() {
-        return onViewDiscovering;
-    }
 
-    public void setOnViewDiscovering(boolean onViewDiscovering) {
-        this.onViewDiscovering = onViewDiscovering;
-    }
-
-    public ArrayList<Profil> getProfilsDiscovered() {
-        return profilsDiscovered;
-    }
-
-    public void removeFirstProfilDiscovered() {
-        profilsDiscovered.remove(0);
+    public void setCurrentNetworkService(NetworkService currentNetworkService) {
+        this.currentNetworkService = currentNetworkService;
     }
 
     private static final String[] REQUIRED_PERMISSIONS =
@@ -101,35 +85,6 @@ public class NetworkHelper implements Serializable {
 
     private static final Strategy STRATEGY = Strategy.P2P_CLUSTER; // Nearby connection strategy for data sending
 
-    private final PayloadCallback payloadCallback =
-            new PayloadCallback() {
-                @Override
-                public void onPayloadReceived(@NonNull String s, @NonNull Payload payload) {
-                    /* Deserialization of incoming payload */
-                    Object dataReceived = new Object();
-                    try{
-                        dataReceived = SerializationHelper.deserialize(payload.asBytes());
-                    } catch (IOException | ClassNotFoundException e) {
-                        e.printStackTrace();
-                    }
-
-                    /*if ( dataReceived instanceof Profil){
-                        MainActivity.profil = (Profil) dataReceived;
-                    }*/
-
-                }
-
-                @Override
-                public void onPayloadTransferUpdate(@NonNull String s, @NonNull PayloadTransferUpdate payloadTransferUpdate) {
-                    Log.i(TAG, String.format(
-                            "onPayloadTransferUpdate(endpointId=%s, update=%s)", s, payloadTransferUpdate));
-                }
-            };
-
-
-
-
-
     public NetworkHelper(Context appContext, String infoConnection) {
         this.appContext = appContext;
         this.connectionsClient = Nearby.getConnectionsClient(appContext);
@@ -144,26 +99,15 @@ public class NetworkHelper implements Serializable {
         return REQUIRED_PERMISSIONS;
     }
 
-
-
-
     private final EndpointDiscoveryCallback endpointDiscoveryCallback =
             new EndpointDiscoveryCallback() {
                 @Override
                 public void onEndpointFound(String endpointId, DiscoveredEndpointInfo info) {
-
-                    //Toast.makeText(appContext, "Detecté a proximité :" + info.getEndpointName() , Toast.LENGTH_SHORT).show();
                     Log.w("newEndPoint", info.getEndpointName());
-
-
-
                     newDiscovery(info.getEndpointName());
-
                 }
-
                 @Override
                 public void onEndpointLost(String endpointId) {
-                    // A previously discovered endpoint has gone away.
                 }
             };
 
@@ -172,41 +116,13 @@ public class NetworkHelper implements Serializable {
             new ConnectionLifecycleCallback() {
                 @Override
                 public void onConnectionInitiated(String endpointId, ConnectionInfo info) {
-                    Log.i(TAG, "onConnectionInitiated: rejecting connection");
-                    connectionsClient
-                            .acceptConnection(endpointId, payloadCallback)
-                            .addOnFailureListener(
-                                    new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Log.w(TAG, "acceptConnection() failed.", e);
-                                        }
-                                    });
                 }
 
                 @Override
                 public void onConnectionResult(String endpointId, ConnectionResolution result) {
-                    switch (result.getStatus().getStatusCode()) {
-                        case ConnectionsStatusCodes.STATUS_OK:
-                            // We're connected! Can now start sending and receiving data.
-                            endpointIdClient = endpointId;
-                            MainActivity.clientCo.setText("Connecté");
-                            break;
-                        case ConnectionsStatusCodes.STATUS_CONNECTION_REJECTED:
-                            // The connection was rejected by one or both sides.
-                            break;
-                        case ConnectionsStatusCodes.STATUS_ERROR:
-                            // The connection broke before it was able to be accepted.
-                            break;
-                        default:
-                            // Unknown status code
-                    }
                 }
-
                 @Override
                 public void onDisconnected(String endpointId) {
-                    // We've been disconnected from this endpoint. No more data can be
-                    // sent or received.
                 }
             };
 
@@ -222,7 +138,6 @@ public class NetworkHelper implements Serializable {
         if (!discovering && !advertising) {
             startAdvertising();
             startDiscovery();
-            MainActivity.clientCo.setText("Cherche...");
         }
     }
 
@@ -280,29 +195,7 @@ public class NetworkHelper implements Serializable {
         }
     }
 
-
-    public void sendToClient(final Object o) throws IOException {
-        Payload data = Payload.fromBytes(SerializationHelper.serialize(o));
-        connectionsClient
-                .sendPayload(endpointIdClient, data)
-                .addOnSuccessListener(
-                        new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                Log.i(TAG, "SendToClient (" + endpointIdClient + ") Payload : " + o.toString());
-                            }
-                        })
-                .addOnFailureListener(
-                        new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.w(TAG,"sendPayload() failed.", e);
-                            }
-                        });
-    }
-
-
-    private void newDiscovery(String newemailDiscovered){
+    private void newDiscovery(final String newemailDiscovered){
         emailDiscovered = newemailDiscovered;
         String url = "http://89.87.13.28:8800/database/proximity_social_network/php-request/newdiscovery.php";
 
@@ -322,19 +215,16 @@ public class NetworkHelper implements Serializable {
                             String email = object.getString("email").trim();
                             String uriPicture = object.getString("uri_picture").trim();
 
-                            //Toast.makeText(appContext,"decouvert " + email + " " + name + " " + uriPicture, Toast.LENGTH_LONG).show();
-                            //lancer la vue
+                            Log.d("newEndPoint","decouvert " + email + " " + name + " " + uriPicture );
 
-                            profilsDiscovered.add(new Profil(name,email,uriPicture));
-                            currentMainActivity.sendOnChannelNewPerson(name);
-                            if(!isOnViewDiscovering()){
-                                Intent intent = new Intent(appContext, PersonDiscoveredActivity.class);
-                                appContext.startActivity(intent);
+                            App.profilsDiscovered.add(new Profil(name,email,uriPicture));
+                            currentNetworkService.sendNotificationNewPerson(name);
+
+                            // ***** redirection to PersonDiscovery if app launched ****** //
+                            if(currentNetworkService.isInstanceMainActivityCreated()){
+                                currentNetworkService.intentToDiscoveryAccount();
                             }
                         }
-
-                    }
-                    else{
 
                     }
                 }
@@ -342,17 +232,13 @@ public class NetworkHelper implements Serializable {
                     e.printStackTrace();
                     Toast.makeText(appContext, " error " + e.toString(), Toast.LENGTH_LONG).show();
                 }
-                /* if(response.trim().equals("success")){
-                    Toast.makeText(getApplicationContext(), "Login success", Toast.LENGTH_SHORT).show();
-                }
-                else {
-                    Toast.makeText(getApplicationContext(), "Login failed", Toast.LENGTH_SHORT).show();
-                } */
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(appContext, "error :" + error.toString(), Toast.LENGTH_LONG).show();
+                Toast.makeText(appContext, "Nouvelle personne dévouverte hors connexion", Toast.LENGTH_LONG).show();
+                currentNetworkService.sessionManager.AddNewPersonOffline(emailDiscovered);
+
             }
         }) {
             @Override

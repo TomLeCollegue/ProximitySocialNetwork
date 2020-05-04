@@ -2,13 +2,11 @@ package com.example.proximitysocialnetwork;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.DownloadManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.textclassifier.TextLinks;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -26,11 +24,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class loginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
     private Button buttonLogin;
     private EditText email;
@@ -43,9 +40,9 @@ public class loginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        // ****** Initialisation **********//
         sessionManager = new SessionManager(this);
-
-
         buttonLogin = findViewById(R.id.button_login);
         email = findViewById(R.id.mail_adress);
         password = findViewById(R.id.password);
@@ -58,10 +55,11 @@ public class loginActivity extends AppCompatActivity {
             }
         });
 
+        // ***** Listener on textView create account *** //
         create_account.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(loginActivity.this, AccountCreationActivity.class));
+                startActivity(new Intent(LoginActivity.this, AccountCreationActivity.class));
             }
         });
     }
@@ -86,7 +84,7 @@ public class loginActivity extends AppCompatActivity {
                             String email = object.getString("email").trim();
 
                             sessionManager.createSession(name,email);
-                            startActivity(new Intent(loginActivity.this, MainActivity.class));
+                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
 
 
                             //Toast.makeText(getApplicationContext(), "Connecté avec succès", Toast.LENGTH_SHORT).show();
@@ -94,7 +92,7 @@ public class loginActivity extends AppCompatActivity {
 
                     }
                     else{
-                        //Toast.makeText(getApplicationContext(), "Connecté avec succès", Toast.LENGTH_SHORT).show();
+                        // ***** fail connection : anim textView **** //
                         email.startAnimation(animation);
                         password.startAnimation(animation);
 
@@ -102,16 +100,11 @@ public class loginActivity extends AppCompatActivity {
                 }
                 catch (JSONException e){
                     e.printStackTrace();
+
+                    // ***** fail connection : anim textView **** //
                     email.startAnimation(animation);
                     password.startAnimation(animation);
-                    //Toast.makeText(getApplicationContext(), " error " + e.toString(), Toast.LENGTH_SHORT).show();
                 }
-                /* if(response.trim().equals("success")){
-                    Toast.makeText(getApplicationContext(), "Login success", Toast.LENGTH_SHORT).show();
-                }
-                else {
-                    Toast.makeText(getApplicationContext(), "Login failed", Toast.LENGTH_SHORT).show();
-                } */
             }
         }, new Response.ErrorListener() {
             @Override
