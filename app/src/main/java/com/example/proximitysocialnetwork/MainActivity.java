@@ -13,9 +13,12 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.nfc.Tag;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -29,14 +32,26 @@ import android.widget.Toast;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import static android.graphics.Bitmap.Config.RGB_565;
 
@@ -92,23 +107,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked == true){
-                    // ******** new Network Helper ********//
-                    //net = new NetworkHelper(getApplicationContext(), mEmail);
-                    //net.setCurrentMainActivity(MainActivity.this);
-                    // ******* beginning Searching people *****//
-                    //net.SeachPeople();
                     clientCo.setText("• Visible •");
                     clientCo.setTextColor(getResources().getColor(R.color.ColorGreen));
-
                     // **** Start the service ***** //
                     startService();
                 }
                 else{
-                    // **** Stopping discovery ****** //
-                    //net.StopAll();
                     clientCo.setText("• Invisible •");
                     clientCo.setTextColor(getResources().getColor(R.color.ColorRed));
-
                     // **** Stop the service ***** //
                     stopService();
 
@@ -123,6 +129,8 @@ public class MainActivity extends AppCompatActivity {
         HashMap<String,String > user = sessionManager.getUserDetail();
         mName = user.get(sessionManager.NAME);
         mEmail = user.get(sessionManager.EMAIL);
+        loadDataOffLineDiscovery();
+
         urlDownload = "http://89.87.13.28:8800/database/proximity_social_network/images/profile_pic_"+ mEmail +".jpg";
         downloadProfileImage();
         name.setText(mName);
@@ -229,6 +237,82 @@ public class MainActivity extends AppCompatActivity {
     public void stopService() {
         Intent serviceIntent = new Intent(this, NetworkService.class);
         stopService(serviceIntent);
+    }
+
+
+    public void loadDataOffLineDiscovery(){
+        SharedPreferences sharedPreferences = getSharedPreferences("LOGIN", MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = sharedPreferences.getString("LIST_DISCOVERED_OFF_LINE", null);
+        Type type = new TypeToken<ArrayList<String>>(){}.getType();
+        App.profilsDiscoveredOffLine = gson.fromJson(json, type);
+        if (App.profilsDiscoveredOffLine == null) {
+            App.profilsDiscoveredOffLine = new ArrayList<>();
+        }
+        if (App.profilsDiscoveredOffLine.isEmpty()) {
+            Toast.makeText(this, "Pas de nouveaux profils à decouvrir", Toast.LENGTH_LONG).show();
+            Log.d("profils", "no profils");
+        }
+        else{
+            ArrayList<String> profilesTocheck = (ArrayList<String>) App.profilsDiscoveredOffLine.clone();
+            sessionManager.ClearNewPersonOffline();
+            for (int i = 0; i < profilesTocheck.size(); i++) {
+                newDiscovery(profilesTocheck.get(i));
+            }
+        }
+    }
+
+
+    private void newDiscovery(final String newemailDiscovered){
+        String url = "http://89.87.13.28:8800/database/proximity_social_network/php-request/newdiscovery.php";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try{
+                    JSONObject jsonObject = new JSONObject(response);
+                    String success = jsonObject.getString("success");
+                    JSONArray jsonArray = jsonObject.getJSONArray("login");
+
+                    if (success.equals("1")){
+                        for (int i = 0; i < jsonArray.length(); i++){
+                            JSONObject object = jsonArray.getJSONObject(i);
+
+                            String name = object.getString("name").trim();
+                            String email = object.getString("email").trim();
+                            String uriPicture = object.getString("uri_picture").trim();
+
+                            Log.d("newEndPoint","decouvert " + email + " " + name + " " + uriPicture );
+
+                            App.profilsDiscovered.add(new Profil(name,email,uriPicture));
+                            startActivity(new Intent(MainActivity.this, PersonDiscoveredActivity.class));
+                        }
+
+                    }
+                }
+                catch (JSONException e){
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), " error " + e.toString(), Toast.LENGTH_LONG).show();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), "error :" + error.toString(), Toast.LENGTH_LONG).show();
+                sessionManager.AddNewPersonOffline(newemailDiscovered);
+
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("personal_email", mEmail.trim());
+                params.put("discovered_email", newemailDiscovered);
+                return params;
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
     }
 
 

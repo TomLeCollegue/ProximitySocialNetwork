@@ -24,7 +24,7 @@ public class NetworkService extends Service {
     private static NetworkService instance = null;
     public static MainActivity instanceMainActivity = null;
     public static NetworkHelper net;
-    SessionManager sessionManager;
+    public SessionManager sessionManager;
     private String emailSession;
 
 

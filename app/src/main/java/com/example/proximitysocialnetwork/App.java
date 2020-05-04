@@ -14,6 +14,7 @@ public class App extends Application {
     public static final String CHANNEL_ID_SERVICE = "serviceNetwork";
 
     public static ArrayList<Profil> profilsDiscovered = new ArrayList<>();
+    public static ArrayList<String> profilsDiscoveredOffLine = new ArrayList<>();
 
     public ArrayList<Profil> getProfilsDiscovered() {
         return profilsDiscovered;
@@ -21,6 +22,10 @@ public class App extends Application {
 
     public static void removeFirstProfilDiscovered() {
         profilsDiscovered.remove(0);
+    }
+
+    public static void clearProfilsDiscoveredOffline(){
+        profilsDiscoveredOffLine.clear();
     }
 
     @Override

@@ -64,6 +64,7 @@ public class NetworkHelper implements Serializable {
     private NetworkService currentNetworkService;
 
 
+
     public void setCurrentNetworkService(NetworkService currentNetworkService) {
         this.currentNetworkService = currentNetworkService;
     }
@@ -194,7 +195,7 @@ public class NetworkHelper implements Serializable {
         }
     }
 
-    private void newDiscovery(String newemailDiscovered){
+    private void newDiscovery(final String newemailDiscovered){
         emailDiscovered = newemailDiscovered;
         String url = "http://89.87.13.28:8800/database/proximity_social_network/php-request/newdiscovery.php";
 
@@ -236,6 +237,8 @@ public class NetworkHelper implements Serializable {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Toast.makeText(appContext, "error :" + error.toString(), Toast.LENGTH_LONG).show();
+                currentNetworkService.sessionManager.AddNewPersonOffline(emailDiscovered);
+
             }
         }) {
             @Override
