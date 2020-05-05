@@ -24,23 +24,29 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".EditPasswordActivity"
+            android:screenOrientation="sensorPortrait"/>
+        <activity
             android:name=".EditAccountActivity"
-            android:screenOrientation="sensorPortrait"/>
-        <activity android:name=".loginActivity"
-            android:screenOrientation="sensorPortrait"/>
-        <activity android:name=".InfoAccountActivity"
-            android:screenOrientation="sensorPortrait"/>
-        <activity android:name=".PersonDiscoveredActivity"/>
-        <activity android:name=".MainActivity">
-          android:screenOrientation="sensorPortrait">
+            android:screenOrientation="sensorPortrait" />
+        <activity
+            android:name=".loginActivity"
+            android:screenOrientation="sensorPortrait" />
+        <activity
+            android:name=".InfoAccountActivity"
+            android:screenOrientation="sensorPortrait" />
+        <activity android:name=".PersonDiscoveredActivity" />
+        <activity android:name=".MainActivity"
+            android:screenOrientation="sensorPortrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AccountCreationActivity"
-            android:screenOrientation="sensorPortrait"/>
+        <activity
+            android:name=".AccountCreationActivity"
+            android:screenOrientation="sensorPortrait" />
 
         <meta-data
             android:name="preloaded_fonts"

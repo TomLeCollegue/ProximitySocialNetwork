@@ -60,37 +60,9 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/oldPassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPassword"
-            android:padding="15dp"
-            android:layout_margin="5dp"
-            android:background="@drawable/plaintextstyle"
-            android:hint="Votre ancien mot de passe"/>
-        <EditText
-            android:id="@+id/newPassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPassword"
-            android:padding="15dp"
-            android:layout_margin="5dp"
-            android:background="@drawable/plaintextstyle"
-            android:hint="Vérifiez votre mot de de passe"/>
-        <EditText
-            android:id="@+id/confirmNewPassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPassword"
-            android:padding="15dp"
-            android:layout_margin="5dp"
-            android:background="@drawable/plaintextstyle"
-            android:hint="Votre nouveau de mot de passe"/>
-
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
             <Button
                 android:id="@+id/btnEditAccount"
                 android:layout_width="match_parent"
@@ -106,7 +78,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"/>
         </FrameLayout>
+        <Button
+            android:id="@+id/btnActivityPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_style_account_create"
+            android:text="Modifier Mot de passe"
+            android:layout_margin="10dp"
+            android:layout_marginTop="10dp"
+            android:elevation="100dp"/>
     </LinearLayout>
+
 
 
 </LinearLayout>
