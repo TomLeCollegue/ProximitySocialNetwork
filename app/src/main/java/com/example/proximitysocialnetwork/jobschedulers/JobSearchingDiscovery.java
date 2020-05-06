@@ -60,9 +60,6 @@ public class JobSearchingDiscovery extends JobService {
         return true;
     }
     private void doBackgroundWork(final JobParameters params) {
-
-
-        sendNotificationNewPerson("test");
         checkOnserver();
         jobFinished(params, false);
 
@@ -92,7 +89,7 @@ public class JobSearchingDiscovery extends JobService {
                             sendNotificationNewPerson(name);
                             App.profilsDiscovered.add(profilDiscovered);
                         }
-                        if (NetworkService.isInstanceMainActivityCreated()) {
+                        if ((NetworkService.isInstanceMainActivityCreated()) && (!App.profilsDiscovered.isEmpty())) {
                             Intent intent = new Intent(getApplicationContext(), PersonDiscoveredActivity.class);
                             intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
