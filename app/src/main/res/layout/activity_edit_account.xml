@@ -8,43 +8,87 @@
     android:orientation="vertical"
     tools:context=".EditAccountActivity"
     android:padding="10dp">
+    <TextView
+        android:id="@+id/textView_creation_compte"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:fontFamily="@font/carter_one"
+        android:gravity="center_horizontal|center_vertical"
+        android:padding="10dp"
+        android:text="Modifier votre compte"
+        android:textSize="25dp"
+        android:textStyle="bold" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/profile_image_edit"
+        android:layout_width="96dp"
+        android:layout_height="96dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="10dp"
+        android:src="@drawable/add_profil_img"
+        android:elevation="4dp"/>
 
     <EditText
         android:id="@+id/editName"
-        android:padding="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:padding="15dp"
+        android:layout_margin="5dp"
         android:background="@drawable/plaintextstyle"
         android:hint="Name"/>
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="150dp"
         android:layout_marginTop="10dp">
 
         <EditText
             android:id="@+id/editDesc"
-            android:padding="5dp"
+            android:padding="15dp"
+            android:layout_margin="5dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:inputType="textPersonName"
             android:background="@drawable/plaintextstyle"
             android:hint="Description"
             android:gravity="top"
              />
     </FrameLayout>
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <Button
-        android:id="@+id/btnEditAccount"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="modifier"/>
-        <ProgressBar
-            android:id="@+id/progressEditAcc"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </FrameLayout>
+            android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/btnEditAccount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_style_account_create"
+                android:text="modifier"
+                android:layout_margin="10dp"
+                android:layout_marginTop="10dp"
+                android:elevation="100dp"/>
+            <ProgressBar
+                android:id="@+id/progressEditAcc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"/>
+        </FrameLayout>
+        <Button
+            android:id="@+id/btnActivityPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_style_account_create"
+            android:text="Modifier Mot de passe"
+            android:layout_margin="10dp"
+            android:layout_marginTop="10dp"
+            android:elevation="100dp"/>
+    </LinearLayout>
+
 
 
 </LinearLayout>

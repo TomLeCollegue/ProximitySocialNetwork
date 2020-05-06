@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity implements AdapterNotif.OnIt
     private Switch switchNetwork;
     public static TextView textNotifNumber;
 
+
     SessionManager sessionManager;
     private ImageView profileImage;
     private String urlDownload;
@@ -133,6 +134,7 @@ public class MainActivity extends AppCompatActivity implements AdapterNotif.OnIt
                     // **** Stop the service ***** //
                     stopService();
 
+
                 }
             }
         });
@@ -152,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements AdapterNotif.OnIt
         name.setText(mName);
         email.setText(mEmail);
 
-
+      
         // *******Listener Intent to activities*********//
         infoAccount.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -186,8 +188,12 @@ public class MainActivity extends AppCompatActivity implements AdapterNotif.OnIt
             }
         });
     }
-
-
+        // try with that to resume MainActivity
+        @Override
+        public void onResume(){
+            super.onResume();
+            name.setText(mName);
+        }
 
     // ****** Gestion Permission ****** //
     @Override
@@ -451,8 +457,5 @@ public class MainActivity extends AppCompatActivity implements AdapterNotif.OnIt
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
     }
-
-
-
 
 }
