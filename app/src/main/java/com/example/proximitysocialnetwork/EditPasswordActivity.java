@@ -75,6 +75,7 @@ public class EditPasswordActivity extends AppCompatActivity {
                     if(matcherPassword.find()) {
                         editPassword();
                         startActivity(new Intent(EditPasswordActivity.this, EditAccountActivity.class));
+                        finish();
                     }
                 }
             }
@@ -111,7 +112,7 @@ public class EditPasswordActivity extends AppCompatActivity {
     }
     @Override
     public void onBackPressed(){
-        startActivity(new Intent(this, EditAccountActivity.class));
+        startActivity(new Intent(EditPasswordActivity.this, EditAccountActivity.class));
         finish();
     }
 }

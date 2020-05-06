@@ -165,6 +165,7 @@ public class EditAccountActivity extends AppCompatActivity {
                     public void onClick(View v) {
                         Intent myIntent = new Intent(EditAccountActivity.this, EditPasswordActivity.class);
                         startActivity(myIntent);
+                        finish();
                     }
                 });
 
