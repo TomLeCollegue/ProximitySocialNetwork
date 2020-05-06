@@ -32,7 +32,7 @@
             android:name=".EditAccountActivity"
             android:screenOrientation="sensorPortrait" />
         <activity
-            android:name=".loginActivity"
+            android:name=".LoginActivity"
             android:screenOrientation="sensorPortrait" />
         <activity
             android:name=".InfoAccountActivity"

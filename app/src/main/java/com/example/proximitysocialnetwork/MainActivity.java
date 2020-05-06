@@ -97,6 +97,7 @@ public class MainActivity extends AppCompatActivity implements AdapterNotif.OnIt
         setContentView(R.layout.activity_main);
         startService(new Intent(getBaseContext(), OnclearFromRecentService.class));
 
+
         // ****** Initialisation **********//
         sessionManager = new SessionManager(this);
         notificationManager = NotificationManagerCompat.from(this);
@@ -110,6 +111,8 @@ public class MainActivity extends AppCompatActivity implements AdapterNotif.OnIt
         switchNetwork = findViewById(R.id.switch1);
         notif_button = findViewById(R.id.notif);
         textNotifNumber = findViewById(R.id.text_notif_number);
+        //******* check login for redirection to loginActivity **********//
+        sessionManager.checkLoggin();
 
         // ****** check if the network is running or not ******** //
         if(NetworkService.isInstanceCreated()){
@@ -118,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements AdapterNotif.OnIt
             clientCo.setTextColor(getResources().getColor(R.color.ColorGreen));
         }
 
-        // **** switch online Offline *** //
+        // **** switch online Offline **** //
         switchNetwork.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -133,27 +136,24 @@ public class MainActivity extends AppCompatActivity implements AdapterNotif.OnIt
                     clientCo.setTextColor(getResources().getColor(R.color.ColorRed));
                     // **** Stop the service ***** //
                     stopService();
-
-
                 }
             }
         });
 
-        // ****** check login for redirection to loginActivity **********//
-        sessionManager.checkLoggin();
 
-        // ****** Recup info from session and picture from server *********//
+        //******* Recup info from session and picture from server *********//
         HashMap<String,String > user = sessionManager.getUserDetail();
         mName = user.get(sessionManager.NAME);
         mEmail = user.get(sessionManager.EMAIL);
-        loadDataOffLineDiscovery();
-        getProfilnotManaged();
 
         urlDownload = "http://89.87.13.28:8800/database/proximity_social_network/images/profile_pic_"+ mEmail +".jpg";
         downloadProfileImage();
         name.setText(mName);
         email.setText(mEmail);
 
+        // get profiles from offline discovery and profiles not managed
+        loadDataOffLineDiscovery();
+        getProfilnotManaged();
       
         // *******Listener Intent to activities*********//
         infoAccount.setOnClickListener(new View.OnClickListener() {
@@ -168,6 +168,7 @@ public class MainActivity extends AppCompatActivity implements AdapterNotif.OnIt
                 Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.alpha);
                 editButton.startAnimation(animation);
                 startActivity(new Intent(MainActivity.this, EditAccountActivity.class));
+                finish();
             }
         });
         logout.setOnClickListener(new View.OnClickListener() {
@@ -188,12 +189,6 @@ public class MainActivity extends AppCompatActivity implements AdapterNotif.OnIt
             }
         });
     }
-        // try with that to resume MainActivity
-        @Override
-        public void onResume(){
-            super.onResume();
-            name.setText(mName);
-        }
 
     // ****** Gestion Permission ****** //
     @Override
@@ -255,21 +250,18 @@ public class MainActivity extends AppCompatActivity implements AdapterNotif.OnIt
         requestQueue.add(request);
     }
 
-
     // ******** START AND STOP netWork Service ******** //
     public void startService() {
         Intent serviceIntent = new Intent(this, NetworkService.class);
         ContextCompat.startForegroundService(this, serviceIntent);
         NetworkService.instanceMainActivity = this;
     }
-
-
     public void stopService() {
         Intent serviceIntent = new Intent(this, NetworkService.class);
         stopService(serviceIntent);
     }
 
-
+    // ********** Load profil from online dicovery ******* //
     public void loadDataOffLineDiscovery(){
         SharedPreferences sharedPreferences = getSharedPreferences("LOGIN", MODE_PRIVATE);
         Gson gson = new Gson();
@@ -280,7 +272,6 @@ public class MainActivity extends AppCompatActivity implements AdapterNotif.OnIt
             App.profilsDiscoveredOffLine = new ArrayList<>();
         }
         if (App.profilsDiscoveredOffLine.isEmpty()) {
-            //Toast.makeText(this, "Pas de nouveaux profils à decouvrir", Toast.LENGTH_LONG).show();
             Log.d("profils", "no profils");
         }
         else{
@@ -296,7 +287,7 @@ public class MainActivity extends AppCompatActivity implements AdapterNotif.OnIt
         }
     }
 
-
+    // ********** with an email return the profil ******* //
     private void newDiscovery(final String newemailDiscovered){
         String url = "http://89.87.13.28:8800/database/proximity_social_network/php-request/newdiscovery.php";
 
@@ -318,8 +309,10 @@ public class MainActivity extends AppCompatActivity implements AdapterNotif.OnIt
 
                             Log.d("newEndPoint","decouvert " + email + " " + name + " " + uriPicture );
 
-                            App.profilsDiscovered.add(new Profil(name,email,uriPicture));
-                            //startActivity(new Intent(MainActivity.this, PersonDiscoveredActivity.class));
+                            Profil profil = new Profil(name,email,uriPicture);
+                            if(!containsProfil(profil)){
+                                App.profilsDiscovered.add(profil);
+                            }
                         }
 
                     }
@@ -349,7 +342,7 @@ public class MainActivity extends AppCompatActivity implements AdapterNotif.OnIt
         requestQueue.add(stringRequest);
     }
 
-
+    // ********* pop up Notif ******** //
     public void displayPopUp(View v){
         LayoutInflater inflater = (LayoutInflater)
                 getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -385,7 +378,6 @@ public class MainActivity extends AppCompatActivity implements AdapterNotif.OnIt
 
     }
 
-
     // ****** Listener RecyclerView **** //
     public void onItemClick(int position) {
         Intent intent = new Intent(MainActivity.this, PersonDiscoveredActivity.class);
@@ -402,7 +394,6 @@ public class MainActivity extends AppCompatActivity implements AdapterNotif.OnIt
             textNotifNumber.setVisibility(View.VISIBLE);
         }
     }
-
 
     public void getProfilnotManaged(){
         String url = "http://89.87.13.28:8800/database/proximity_social_network/php-request/getprofilnotmanaged.php";
@@ -426,13 +417,11 @@ public class MainActivity extends AppCompatActivity implements AdapterNotif.OnIt
                             Log.d("newEndPoint","decouvert " + email + " " + name + " " + uriPicture );
 
                             Profil profil = new Profil(name,email,uriPicture);
-                            if(!App.profilsDiscovered.contains(profil)){
+                            if(!containsProfil(profil)){
                                 App.profilsDiscovered.add(profil);
-                                //startActivity(new Intent(MainActivity.this, PersonDiscoveredActivity.class));
                             }
-                            UpdateNotifNumber();
                         }
-
+                        UpdateNotifNumber();
                     }
                 }
                 catch (JSONException e){
@@ -456,6 +445,16 @@ public class MainActivity extends AppCompatActivity implements AdapterNotif.OnIt
         };
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
+    }
+
+
+    public static boolean containsProfil(Profil profil){
+        for (int i = 0; i < App.profilsDiscovered.size() ; i++) {
+            if(App.profilsDiscovered.get(i).getEmail().equals(profil.getEmail())){
+                return true;
+            }
+        }
+        return false;
     }
 
 }
