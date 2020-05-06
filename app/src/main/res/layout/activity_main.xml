@@ -4,79 +4,159 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
+    android:gravity="top|center"
     android:orientation="vertical"
-    android:padding="20dp"
-    android:gravity="top|center">
+    tools:context=".MainActivity">
+
     <FrameLayout
+        android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="top">
+        android:background="@color/AlmostWhite"
+        android:elevation="25dp"
+        android:gravity="top"
+        android:padding="8dp">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginLeft="15dp"
+            app:srcCompat="@mipmap/logo_proximity_round" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/notif"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_gravity="right"
+                android:layout_marginRight="15dp"
+                app:srcCompat="@mipmap/logo_notif_round" />
+
+            <TextView
+                android:id="@+id/text_notif_number"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="bottom|right"
+                android:layout_marginRight="15dp"
+                android:background="@drawable/style_notif_number"
+                android:gravity="center|center_vertical"
+                android:text="2"
+                android:textColor="#FFFFFF"
+                android:textSize="10dp" />
+
+        </FrameLayout>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Accueil"
-            android:textSize="50dp"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:gravity="bottom"
+            android:text="Proximity"
+            android:textSize="25dp" />
     </FrameLayout>
-    <LinearLayout
+
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center">
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="20dp">
 
-        <TextView
-            android:id="@+id/name"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_margin="10dp">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/profilePic2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:padding="25dp" />
+
+                <ImageView
+                    android:id="@+id/editAccountButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:scaleType="centerInside"
+                    app:srcCompat="@mipmap/logo_pen_edit_round" />
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/client_co"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center_horizontal|center_vertical"
+                android:text="• Invisible •"
+                android:textColor="@color/ColorRed"
+                android:textSize="18dp" />
+
+            <Switch
+                android:id="@+id/switch1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="20dp"
+                android:gravity="center_horizontal" />
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="name"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="email" />
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:text="name" />
+            android:layout_gravity="bottom|center_horizontal"
+            android:gravity="clip_horizontal"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:text="email" />
+            <Button
+                android:id="@+id/info_compte"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginBottom="15dp"
+                android:visibility="invisible"
+                android:background="@drawable/button_style_account_create"
+                android:text="Info Compte" />
 
-        <Button
-            android:id="@+id/info_compte"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:background="@drawable/button_style_account_create"
-            android:text="Info Compte" />
+            <Button
+                android:id="@+id/logout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_margin="5dp"
+                android:background="@drawable/button_style_account_create"
+                android:text="Se deconnecter" />
+        </LinearLayout>
 
-        <Button
-            android:id="@+id/search_people"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:background="@drawable/button_style_account_create"
-            android:text="Chercher des gens" />
-
-        <Button
-            android:id="@+id/send_account"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:background="@drawable/button_style_account_create"
-            android:text="arreter de Chercher" />
-
-        <TextView
-            android:id="@+id/client_co"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal|center_vertical"
-            android:text="Nearby Off" />
-
-        <Button
-            android:id="@+id/logout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Se deconnecter" />
-
-    </LinearLayout>
+    </FrameLayout>
 
 
 </LinearLayout>

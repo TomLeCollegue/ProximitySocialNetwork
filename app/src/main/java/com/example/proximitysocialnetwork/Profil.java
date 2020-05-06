@@ -20,12 +20,11 @@ public class Profil implements Serializable {
     private String email;
     private String birthDate;
     private String profileImage;
-    private String password;
 
-    public Profil(String name, String email, String birthDate) {
+    public Profil(String name, String email, String profileImage) {
         this.name = name;
         this.email = email;
-        this.birthDate = birthDate;
+        this.profileImage = profileImage;
     }
 
     public String getName() {
@@ -51,15 +50,6 @@ public class Profil implements Serializable {
     public void setBirthDate(String birthDate) {
         this.birthDate = birthDate;
     }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
 
     public String getProfileImage() {
         return profileImage;

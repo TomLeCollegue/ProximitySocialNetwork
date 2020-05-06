@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,112 +7,123 @@
     android:layout_height="match_parent"
     tools:context=".AccountCreationActivity">
 
-    <LinearLayout
-        android:id="@+id/base_layout"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="10dp">
-
-        <TextView
-            android:id="@+id/textView_creation_compte"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:fontFamily="@font/carter_one"
-            android:gravity="center_horizontal|center_vertical"
-            android:padding="10dp"
-            android:text="Créer un nouveau compte"
-            android:textSize="25dp"
-            android:textStyle="bold" />
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/profile_image"
-            android:layout_width="96dp"
-            android:layout_height="96dp"
-            android:layout_gravity="center"
-            android:layout_marginBottom="10dp"
-            android:src="@drawable/add_profil_img"
-            android:elevation="4dp"/>
-
-        <EditText
-            android:id="@+id/name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:background="@drawable/plaintextstyle"
-            android:ems="10"
-            android:hint="Nom, Prénom"
-            android:inputType="textPersonName"
-            android:padding="15dp" />
-
-        <EditText
-            android:id="@+id/email"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:background="@drawable/plaintextstyle"
-            android:ems="10"
-            android:hint="Adresse Mail"
-            android:inputType="textEmailAddress"
-            android:padding="15dp" />
-
-        <EditText
-            android:id="@+id/birth_date"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:background="@drawable/plaintextstyle"
-            android:ems="10"
-            android:hint="yyyy/mm/dd"
-            android:inputType="date"
-            android:padding="15dp" />
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:orientation="vertical"></LinearLayout>
-
-        <EditText
-            android:id="@+id/password"
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:background="@drawable/plaintextstyle"
-            android:ems="10"
-            android:hint="Mot de passe"
-            android:inputType="textPassword"
-            android:padding="15dp" />
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:id="@+id/base_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="10dp">
+
+                <TextView
+                    android:id="@+id/textView_creation_compte"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:fontFamily="@font/carter_one"
+                    android:gravity="center_horizontal|center_vertical"
+                    android:padding="10dp"
+                    android:text="Créer un nouveau compte"
+                    android:textSize="25dp"
+                    android:textStyle="bold" />
+
+                <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                    android:id="@+id/profile_image"
+                    android:layout_width="96dp"
+                    android:layout_height="96dp"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="10dp"
+                    android:elevation="4dp"
+                    android:src="@drawable/add_profil_img" />
+
+                <EditText
+                    android:id="@+id/name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/plaintextstyle"
+                    android:ems="10"
+                    android:hint="Nom, Prénom"
+                    android:inputType="textPersonName"
+                    android:padding="15dp" />
+
+                <EditText
+                    android:id="@+id/email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/plaintextstyle"
+                    android:ems="10"
+                    android:hint="Adresse Mail"
+                    android:inputType="textEmailAddress"
+                    android:padding="15dp" />
+
+                <EditText
+                    android:id="@+id/birth_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/plaintextstyle"
+                    android:ems="10"
+                    android:hint="yyyy/mm/dd"
+                    android:inputType="date"
+                    android:padding="15dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"
+                    android:orientation="vertical"></LinearLayout>
+
+                <EditText
+                    android:id="@+id/password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/plaintextstyle"
+                    android:ems="10"
+                    android:hint="Mot de passe"
+                    android:inputType="textPassword"
+                    android:padding="15dp" />
 
 
-        <EditText
-            android:id="@+id/confirm_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:background="@drawable/plaintextstyle"
-            android:ems="10"
-            android:hint="Confirmer Mot de passe"
-            android:inputType="textPassword"
-            android:padding="15dp" />
+                <EditText
+                    android:id="@+id/confirm_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/plaintextstyle"
+                    android:ems="10"
+                    android:hint="Confirmer Mot de passe"
+                    android:inputType="textPassword"
+                    android:padding="15dp" />
 
-        <ProgressBar
-            android:id="@+id/progressBar2"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:layout_margin="10dp" />
+                <ProgressBar
+                    android:id="@+id/progressBar2"
+                    style="?android:attr/progressBarStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:visibility="gone" />
 
-        <Button
-            android:id="@+id/button_creation_account"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:background="@drawable/button_style_account_create"
-            android:text="Créer votre compte"
-            android:elevation="100dp"/>
+                <Button
+                    android:id="@+id/button_creation_account"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/button_style_account_create"
+                    android:elevation="100dp"
+                    android:text="Créer votre compte" />
 
-    </LinearLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

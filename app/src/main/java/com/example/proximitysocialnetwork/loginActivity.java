@@ -2,11 +2,11 @@ package com.example.proximitysocialnetwork;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.DownloadManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.view.textclassifier.TextLinks;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -24,11 +24,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class loginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
     private Button buttonLogin;
     private EditText email;
@@ -41,8 +40,9 @@ public class loginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        sessionManager = new SessionManager(this);
 
+        // ****** Initialisation **********//
+        sessionManager = new SessionManager(this);
         buttonLogin = findViewById(R.id.button_login);
         email = findViewById(R.id.mail_adress);
         password = findViewById(R.id.password);
@@ -51,22 +51,22 @@ public class loginActivity extends AppCompatActivity {
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent myintent = new Intent(loginActivity.this, MainActivity.class);
-                startActivity(myintent);
                 Login();
             }
         });
 
+        // ***** Listener on textView create account *** //
         create_account.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(loginActivity.this, AccountCreationActivity.class));
+                startActivity(new Intent(LoginActivity.this, AccountCreationActivity.class));
             }
         });
     }
 
     private void Login(){
         String url = "http://89.87.13.28:8800/database/proximity_social_network/php-request/login.php";
+        final Animation animation= AnimationUtils.loadAnimation(getApplicationContext(), R.anim.lefttoright);
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
@@ -84,28 +84,27 @@ public class loginActivity extends AppCompatActivity {
                             String email = object.getString("email").trim();
 
                             sessionManager.createSession(name,email);
-                            startActivity(new Intent(loginActivity.this, MainActivity.class));
+                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
 
-                            //MainActivity.profil = new Profil(name, email, "1999/03/15");
 
-                            Toast.makeText(getApplicationContext(), "Connecté avec succès", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getApplicationContext(), "Connecté avec succès", Toast.LENGTH_SHORT).show();
                         }
 
                     }
                     else{
-                        Toast.makeText(getApplicationContext(), "Connecté avec succès", Toast.LENGTH_SHORT).show();
+                        // ***** fail connection : anim textView **** //
+                        email.startAnimation(animation);
+                        password.startAnimation(animation);
+
                     }
                 }
                 catch (JSONException e){
                     e.printStackTrace();
-                    Toast.makeText(getApplicationContext(), " error " + e.toString(), Toast.LENGTH_SHORT).show();
+
+                    // ***** fail connection : anim textView **** //
+                    email.startAnimation(animation);
+                    password.startAnimation(animation);
                 }
-                /* if(response.trim().equals("success")){
-                    Toast.makeText(getApplicationContext(), "Login success", Toast.LENGTH_SHORT).show();
-                }
-                else {
-                    Toast.makeText(getApplicationContext(), "Login failed", Toast.LENGTH_SHORT).show();
-                } */
             }
         }, new Response.ErrorListener() {
             @Override
