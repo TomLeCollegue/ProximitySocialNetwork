@@ -104,6 +104,8 @@ public class NetworkHelper implements Serializable {
                 @Override
                 public void onEndpointFound(String endpointId, DiscoveredEndpointInfo info) {
                     Log.w("newEndPoint", info.getEndpointName());
+                    currentNetworkService.cancelJob();
+                    currentNetworkService.scheduleJob();
                     newDiscovery(info.getEndpointName());
                 }
                 @Override
@@ -221,7 +223,7 @@ public class NetworkHelper implements Serializable {
                             currentNetworkService.sendNotificationNewPerson(name);
 
                             // ***** redirection to PersonDiscovery if app launched ****** //
-                            if(currentNetworkService.isInstanceMainActivityCreated()){
+                            if((currentNetworkService.isInstanceMainActivityCreated()) && (!App.profilsDiscovered.isEmpty())){
                                 currentNetworkService.intentToDiscoveryAccount();
                             }
                         }
