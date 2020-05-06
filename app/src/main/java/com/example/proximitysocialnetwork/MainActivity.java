@@ -145,6 +145,7 @@ public class MainActivity extends AppCompatActivity implements AdapterNotif.OnIt
         mName = user.get(sessionManager.NAME);
         mEmail = user.get(sessionManager.EMAIL);
         loadDataOffLineDiscovery();
+        getProfilnotManaged();
 
         urlDownload = "http://89.87.13.28:8800/database/proximity_social_network/images/profile_pic_"+ mEmail +".jpg";
         downloadProfileImage();
@@ -273,7 +274,7 @@ public class MainActivity extends AppCompatActivity implements AdapterNotif.OnIt
             App.profilsDiscoveredOffLine = new ArrayList<>();
         }
         if (App.profilsDiscoveredOffLine.isEmpty()) {
-            Toast.makeText(this, "Pas de nouveaux profils à decouvrir", Toast.LENGTH_LONG).show();
+            //Toast.makeText(this, "Pas de nouveaux profils à decouvrir", Toast.LENGTH_LONG).show();
             Log.d("profils", "no profils");
         }
         else{
@@ -312,7 +313,7 @@ public class MainActivity extends AppCompatActivity implements AdapterNotif.OnIt
                             Log.d("newEndPoint","decouvert " + email + " " + name + " " + uriPicture );
 
                             App.profilsDiscovered.add(new Profil(name,email,uriPicture));
-                            startActivity(new Intent(MainActivity.this, PersonDiscoveredActivity.class));
+                            //startActivity(new Intent(MainActivity.this, PersonDiscoveredActivity.class));
                         }
 
                     }
@@ -394,6 +395,61 @@ public class MainActivity extends AppCompatActivity implements AdapterNotif.OnIt
         else{
             textNotifNumber.setVisibility(View.VISIBLE);
         }
+    }
+
+
+    public void getProfilnotManaged(){
+        String url = "http://89.87.13.28:8800/database/proximity_social_network/php-request/getprofilnotmanaged.php";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try{
+                    JSONObject jsonObject = new JSONObject(response);
+                    String success = jsonObject.getString("success");
+                    JSONArray jsonArray = jsonObject.getJSONArray("login");
+
+                    if (success.equals("1")){
+                        for (int i = 0; i < jsonArray.length(); i++){
+                            JSONObject object = jsonArray.getJSONObject(i);
+
+                            String name = object.getString("name").trim();
+                            String email = object.getString("email").trim();
+                            String uriPicture = object.getString("uri_picture").trim();
+
+                            Log.d("newEndPoint","decouvert " + email + " " + name + " " + uriPicture );
+
+                            Profil profil = new Profil(name,email,uriPicture);
+                            if(!App.profilsDiscovered.contains(profil)){
+                                App.profilsDiscovered.add(profil);
+                                //startActivity(new Intent(MainActivity.this, PersonDiscoveredActivity.class));
+                            }
+                            UpdateNotifNumber();
+                        }
+
+                    }
+                }
+                catch (JSONException e){
+                    e.printStackTrace();
+                    Toast.makeText(getApplicationContext(), " error " + e.toString(), Toast.LENGTH_LONG).show();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), "Erreur de connexion", Toast.LENGTH_LONG).show();
+
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("email", mEmail.trim());
+                return params;
+            }
+        };
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(stringRequest);
     }
 
 
