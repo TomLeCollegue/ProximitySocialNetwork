@@ -9,6 +9,7 @@
     <color name="ColorPrincipale3">#82B1FF</color>
     <color name="ColorRed">#D32F2F</color>
     <color name="ColorGreen">#2E7D32</color>
+    <color name="AlmostWhite">#fffafafa</color>
 
 
 </resources>

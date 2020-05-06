@@ -1,33 +1,19 @@
 package com.example.proximitysocialnetwork;
 
-import androidx.annotation.CallSuper;
-import androidx.annotation.ColorInt;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 
-import android.Manifest;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.media.Image;
 import android.net.Uri;
-import android.os.Build;
-
-import android.content.Context;
-import android.content.Intent;
 
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -50,8 +36,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -94,7 +78,7 @@ public class AccountCreationActivity extends AppCompatActivity {
 
         mContext = getApplicationContext();
 
-        // ************ link id to view **********************************
+        // ***** fail connection : anim textView **** //
         name = (EditText) findViewById(R.id.name);
         email = (EditText) findViewById(R.id.email);
         birthDate = (EditText) findViewById(R.id.birth_date);
@@ -104,6 +88,7 @@ public class AccountCreationActivity extends AppCompatActivity {
         profileImage = (ImageView) findViewById(R.id.profile_image);
         loading = findViewById(R.id.progressBar2);
 
+        // ***** Backup initial color TextView **** //
         final ColorStateList oldColors =  email.getTextColors();
          // ****************************************************************
 
@@ -111,20 +96,23 @@ public class AccountCreationActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Animation animation= AnimationUtils.loadAnimation(getApplicationContext(), R.anim.lefttoright);
+
+                // ***** Check if the two password are the sames **** //
                 if(password.getText().toString().equals(confirmPassword.getText().toString())){
+
+                    // ***** init color TextView and Bool **** //
                     correctForm = true;
-                    //saveToInternalStorage();
                     password.setTextColor(oldColors);
                     password.setBackgroundResource(R.drawable.plaintextstyle);
                     confirmPassword.setTextColor(oldColors);
                     confirmPassword.setBackgroundResource(R.drawable.plaintextstyle);
-                    // Verif info Form
+
+                    // ***** Init Regex **** //
                     String regexEmail = "^[A-Za-z0-9+_.-]+@(.+)$";
                     String regexUsername = "^([a-zA-Z]{2,}\\s[a-zA-z]{1,}'?-?[a-zA-Z]{2,}\\s?([a-zA-Z]{1,})?)";
                     String regexPassword = "(?=^.{8,}$)((?=.*\\d)|(?=.*\\W+))(?![.\\n])(?=.*[A-Z])(?=.*[a-z]).*$";
                     /*   Password matching expression. Password must be at least 8 characters,
                     and must include at least one upper case letter, one lower case letter, and one numeric digit or special character.  */
-
                     Pattern pattern = Pattern.compile(regexEmail);
                     Pattern patternUsername = Pattern.compile(regexUsername);
                     Pattern patternPassword = Pattern.compile(regexPassword);
@@ -132,18 +120,19 @@ public class AccountCreationActivity extends AppCompatActivity {
                     Matcher matcherUsername = patternUsername.matcher(name.getText().toString().trim());
                     Matcher matcherPassword = patternPassword.matcher(password.getText().toString().trim());
 
+                    // ***** Recup infi Picture profile **** //
                     Bitmap bmapimage = ((BitmapDrawable) profileImage.getDrawable()).getBitmap();
                     Drawable crossImg = getResources().getDrawable(R.drawable.add_profil_img);
                     Bitmap bmapcross = ((BitmapDrawable) crossImg).getBitmap();
 
-
+                    // ***** Check if you chose a pic **** //
                     if(bmapimage.sameAs(bmapcross)){
                         correctForm = false;
-                        //Toast.makeText(getApplicationContext(),"Mettez une photo de profil", Toast.LENGTH_SHORT).show();
                         profileImage.startAnimation(animation);
                     }
+
+                    // ***** Check Email **** //
                     if(!matcherEmail.find()) {
-                        //Toast.makeText(getApplicationContext(),"Entrez un Email Valide", Toast.LENGTH_SHORT).show();
                         correctForm = false;
 
                         email.setBackgroundResource(R.drawable.plaintextstylered);
@@ -156,6 +145,8 @@ public class AccountCreationActivity extends AppCompatActivity {
                         email.setBackgroundResource(R.drawable.plaintextstyle);
 
                     }
+
+                    // ***** Check Name **** //
                     if(!matcherUsername.find()) {
                         //Toast.makeText(getApplicationContext(),"Entrez un Nom Valide", Toast.LENGTH_SHORT).show();
                         correctForm = false;
@@ -167,6 +158,8 @@ public class AccountCreationActivity extends AppCompatActivity {
                         name.setTextColor(oldColors);
                         name.setBackgroundResource(R.drawable.plaintextstyle);
                     }
+
+                    // ***** Check Password **** //
                     if(!matcherPassword.find()) {
                         Toast.makeText(getApplicationContext(),"Password must be at least 8 characters, " +
                                 "and must include at least one upper case letter, one lower case letter, and one numeric digit or special character.", Toast.LENGTH_LONG).show();
@@ -186,18 +179,17 @@ public class AccountCreationActivity extends AppCompatActivity {
                     }
 
 
-
+                    // ***** If all form is good **** //
                     if(correctForm) {
-                        // correct from : add to the bdd.
-
-
+                        // **** add to the bdd ****** //
                         loading.setVisibility(View.VISIBLE);
                         create_account();
-                        //saveToServer();
                     }
 
                 }
                 else{
+
+                    // ***** Password don't match **** //
                     password.setBackgroundResource(R.drawable.plaintextstylered);
                     password.setTextColor(getResources().getColor(R.color.ColorRed));
                     password.startAnimation(animation);
@@ -215,59 +207,10 @@ public class AccountCreationActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.alpha);
                 profileImage.startAnimation(animation);
-
                 openGallery();
             }
         });
 
-    }
-    //if you want to save your profile_image to your internal storage
-    private void saveToInternalStorage(){
-        OutputStream outputStream = null;
-        BitmapDrawable drawable = (BitmapDrawable) profileImage.getDrawable();
-        Bitmap bitmap = new ImageGestion().getBitmapFromDrawable(drawable);
-
-        String filepath = mContext.getExternalFilesDir(null).getAbsolutePath();
-        File dir = new File (filepath.replace("/files", "") + "/ProfileImages/");
-        Log.d(TAG, filepath.replace("/files", ""));
-        dir.mkdir();
-        File file = new File (dir, "profile_pic_"+ name.getText().toString().replace(" ","") + ".jpg");
-        Log.d("test", file.toString());
-        try{
-            outputStream = new FileOutputStream(file);
-        } catch (FileNotFoundException e){
-            e.printStackTrace();
-        }
-        new ImageGestion().compressImageToJpeg(bitmap,35,outputStream);
-
-        try {
-            outputStream.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            outputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        //MainActivity.profil.setProfileImage(file.toString());
-
-        //Intent intent = new Intent(AccountCreationActivity.this, MainActivity.class);
-        //startActivity(intent);
-
-
-        try {
-            FileOutputStream fos = openFileOutput("profil",Context.MODE_PRIVATE);
-            ObjectOutputStream oos = new ObjectOutputStream(fos);
-            // write object to file
-            //oos.writeObject(MainActivity.profil);
-            // closing resources
-            oos.close();
-            fos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     private void saveToServer(){
@@ -275,15 +218,9 @@ public class AccountCreationActivity extends AppCompatActivity {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, urlUpload, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-
-                
                 Log.d(TAG, response);
-
-                //Toast.makeText(AccountCreationActivity.this, response, Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(AccountCreationActivity.this, loginActivity.class));
-
+                startActivity(new Intent(AccountCreationActivity.this, LoginActivity.class));
             }
-
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
@@ -310,16 +247,9 @@ public class AccountCreationActivity extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-
     private void openGallery() {
         Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
         startActivityForResult(gallery, PICK_IMAGE);
-    }
-
-    public void onBackPressed(){
-        Intent intent = new Intent(AccountCreationActivity.this, MainActivity.class);
-        startActivity(intent);
-        finish();
     }
 
     @Override
@@ -362,5 +292,47 @@ public class AccountCreationActivity extends AppCompatActivity {
             }
         };
         requestQueue.add(stringRequest);
+    }
+
+    //if you want to save your profile_image to your internal storage
+    private void saveToInternalStorage(){
+        OutputStream outputStream = null;
+        BitmapDrawable drawable = (BitmapDrawable) profileImage.getDrawable();
+        Bitmap bitmap = new ImageGestion().getBitmapFromDrawable(drawable);
+
+        String filepath = mContext.getExternalFilesDir(null).getAbsolutePath();
+        File dir = new File (filepath.replace("/files", "") + "/ProfileImages/");
+        Log.d(TAG, filepath.replace("/files", ""));
+        dir.mkdir();
+        File file = new File (dir, "profile_pic_"+ name.getText().toString().replace(" ","") + ".jpg");
+        Log.d("test", file.toString());
+        try{
+            outputStream = new FileOutputStream(file);
+        } catch (FileNotFoundException e){
+            e.printStackTrace();
+        }
+        new ImageGestion().compressImageToJpeg(bitmap,35,outputStream);
+
+        try {
+            outputStream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            outputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            FileOutputStream fos = openFileOutput("profil",Context.MODE_PRIVATE);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            // write object to file
+            //oos.writeObject(MainActivity.profil);
+            // closing resources
+            oos.close();
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
