@@ -1,10 +1,12 @@
 package com.example.proximitysocialnetwork;
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 
-import java.time.Instant;
+import com.google.gson.Gson;
+
 import java.util.HashMap;
 
 public class SessionManager {
@@ -17,6 +19,8 @@ public class SessionManager {
     private static final String LOGIN = "IS_LOGIN";
     public static String NAME = "NAME";
     public static String EMAIL = "EMAIL";
+    public static String PERSONDISCOVEREDOFFLINE = "LIST_DISCOVERED_OFF_LINE";
+    public static String PERSONDISCOVERED = "LIST_DISCOVERED";
 
     public SessionManager(Context context){
         this.context = context;
@@ -31,13 +35,28 @@ public class SessionManager {
         editor.apply();
     }
 
+    public void AddNewPersonOffline(String email){
+        App.profilsDiscoveredOffLine.add(email);
+        Gson gson = new Gson();
+        String json = gson.toJson(App.profilsDiscoveredOffLine);
+        editor.putString("LIST_DISCOVERED_OFF_LINE", json);
+        editor.apply();
+    }
+    public void ClearNewPersonOffline(){
+        App.profilsDiscoveredOffLine.clear();
+        Gson gson = new Gson();
+        String json = gson.toJson(App.profilsDiscoveredOffLine);
+        editor.putString("LIST_DISCOVERED_OFF_LINE", json);
+        editor.apply();
+    }
+
     public boolean isLoggin(){
         return sharedPreferences.getBoolean(LOGIN, false);
     }
 
     public void checkLoggin(){
         if(!this.isLoggin()){
-            Intent i = new Intent(context, loginActivity.class);
+            Intent i = new Intent(context, LoginActivity.class);
             context.startActivity(i);
             ((MainActivity) context).finish();
         }
@@ -54,7 +73,7 @@ public class SessionManager {
     public void logout(){
         editor.clear();
         editor.commit();
-        Intent i = new Intent(context, loginActivity.class);
+        Intent i = new Intent(context, LoginActivity.class);
         context.startActivity(i);
         ((MainActivity) context).finish();
     }

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#00FFFFFF"
+    android:gravity="right">
+
+    <FrameLayout
+        android:id="@+id/popup_layout"
+        android:layout_width="320dp"
+        android:layout_height="250dp"
+        android:layout_marginTop="65dp"
+        android:layout_marginRight="15dp"
+        android:alpha="1.0"
+        android:background="@drawable/style_notif_popup"
+        android:elevation="20dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/text_no_notif"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Aucune Notification" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view_notif"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+</LinearLayout>
