@@ -144,7 +144,7 @@ public class EditAccountActivity extends AppCompatActivity {
                         editProfilePicture();
                         sessionManager.createSession(name.getText().toString(), mEmail);
 
-                        // ****** Intent Kill Main Activity before intent ***** // 
+                        // ****** Intent Kill Main Activity before intent ***** //
                         Intent intent = new Intent(EditAccountActivity.this, MainActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
