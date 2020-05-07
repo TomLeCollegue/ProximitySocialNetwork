@@ -219,14 +219,18 @@ public class NetworkHelper implements Serializable {
 
                             Log.d("newEndPoint","decouvert " + email + " " + name + " " + uriPicture );
 
-                            App.profilsDiscovered.add(new Profil(name,email,uriPicture));
-                            currentNetworkService.sendNotificationNewPerson(name);
+                            Profil profil = new Profil(name,email,uriPicture);
 
-                            // ***** redirection to PersonDiscovery if app launched ****** //
-                            if((currentNetworkService.isInstanceMainActivityCreated()) && (!App.profilsDiscovered.isEmpty())){
-                                currentNetworkService.intentToDiscoveryAccount();
+                            if(!MainActivity.containsProfil(profil)){
+                                App.profilsDiscovered.add(profil);
+                                currentNetworkService.sendNotificationNewPerson(name);
                             }
+                            // ***** redirection to PersonDiscovery if app launched ****** //
+                            /*if((currentNetworkService.isInstanceMainActivityCreated()) && (!App.profilsDiscovered.isEmpty())){
+                                currentNetworkService.intentToDiscoveryAccount();
+                            }*/
                         }
+                        MainActivity.UpdateNotifNumber();
 
                     }
                 }

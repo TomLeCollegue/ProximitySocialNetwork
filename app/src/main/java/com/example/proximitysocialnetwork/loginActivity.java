@@ -85,6 +85,7 @@ public class LoginActivity extends AppCompatActivity {
 
                             sessionManager.createSession(name,email);
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                            finish();
 
 
                             //Toast.makeText(getApplicationContext(), "Connecté avec succès", Toast.LENGTH_SHORT).show();

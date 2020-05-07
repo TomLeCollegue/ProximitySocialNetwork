@@ -37,4 +37,6 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'com.r0adkll:slidableactivity:2.1.0'
+
 }
