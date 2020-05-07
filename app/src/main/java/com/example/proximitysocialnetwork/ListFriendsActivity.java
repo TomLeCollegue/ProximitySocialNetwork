@@ -4,8 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -31,6 +33,7 @@ public class ListFriendsActivity extends AppCompatActivity {
     private RecyclerView rv;
     private AdapterProfilesFriends MyAdapter;
     SessionManager sessionManager;
+    float x1,x2,y1,y2;
 
 
     @Override
@@ -115,6 +118,30 @@ public class ListFriendsActivity extends AppCompatActivity {
             if(profilsFriends.get(i).getEmail().equals(profil.getEmail())){
                 return true;
             }
+        }
+        return false;
+    }
+
+    public boolean onTouchEvent(MotionEvent touchEvent){
+        switch(touchEvent.getAction()){
+            case MotionEvent.ACTION_DOWN:
+                x1 = touchEvent.getX();
+                y1 = touchEvent.getY();
+                break;
+            case MotionEvent.ACTION_UP:
+                x2 = touchEvent.getX();
+                y2 = touchEvent.getY();
+                if(x1 < x2){
+                    /*Intent i = new Intent(ListFriendsActivity.this, MainActivity.class);
+                    startActivity(i);
+                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);*/
+                }else if(x1 > x2){
+                        Intent i = new Intent(ListFriendsActivity.this, MainActivity.class);
+                        startActivity(i);
+                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+
+                }
+                break;
         }
         return false;
     }
