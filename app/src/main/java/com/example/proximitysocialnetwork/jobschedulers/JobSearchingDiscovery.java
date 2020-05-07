@@ -70,10 +70,12 @@ public class JobSearchingDiscovery extends JobService {
     private void checkOnserver(){
         String url = "http://89.87.13.28:8800/database/proximity_social_network/php-request/newDiscoveryFromOther.php";
         Log.d("job", "Check on server");
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try{
+                    boolean newDiscovery = false;
                     JSONObject jsonObject = new JSONObject(response);
                     String success = jsonObject.getString("success");
                     JSONArray jsonArray = jsonObject.getJSONArray("login");
@@ -85,15 +87,19 @@ public class JobSearchingDiscovery extends JobService {
                             String name = object.getString("name").trim();
                             String email = object.getString("email").trim();
                             String profilePicture = object.getString("uri_picture").trim();
-                            Profil profilDiscovered = new Profil(name,email,profilePicture);
-                            sendNotificationNewPerson(name);
-                            App.profilsDiscovered.add(profilDiscovered);
+                            newDiscovery = true;
+                            Profil profil = new Profil(name,email,profilePicture);
+                            if(!MainActivity.containsProfil(profil)){
+                                App.profilsDiscovered.add(profil);
+                                sendNotificationNewPerson(name);
+                            }
                         }
-                        if ((NetworkService.isInstanceMainActivityCreated()) && (!App.profilsDiscovered.isEmpty())) {
+                        /*if ((NetworkService.isInstanceMainActivityCreated()) && newDiscovery) {
                             Intent intent = new Intent(getApplicationContext(), PersonDiscoveredActivity.class);
                             intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
-                        }
+                        }*/
+                        MainActivity.UpdateNotifNumber();
 
                     }
                 }
