@@ -168,7 +168,6 @@ public class MainActivity extends AppCompatActivity implements AdapterNotif.OnIt
                 Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.alpha);
                 editButton.startAnimation(animation);
                 startActivity(new Intent(MainActivity.this, EditAccountActivity.class));
-                finish();
             }
         });
         logout.setOnClickListener(new View.OnClickListener() {
