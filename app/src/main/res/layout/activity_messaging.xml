@@ -10,14 +10,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_margin="10dp"
-        android:background="@drawable/style_recycler_view_notif"
+        android:background="@color/AlmostWhite"
         android:gravity="center"
         android:orientation="horizontal"
-        android:padding="10dp">
+        android:padding="10dp"
+        android:elevation="25dp">
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/profilepicnotif"
+            android:id="@+id/profile_pic_contact"
             android:layout_width="70dp"
             android:layout_height="match_parent"
             android:layout_gravity="center" />
@@ -33,6 +33,7 @@
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_messages"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1">
