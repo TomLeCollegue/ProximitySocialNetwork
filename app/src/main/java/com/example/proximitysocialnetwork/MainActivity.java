@@ -24,6 +24,7 @@ import android.util.Log;
 import android.util.Pair;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -90,6 +91,7 @@ public class MainActivity extends AppCompatActivity implements AdapterNotif.OnIt
     private RecyclerView rc;
 
     private NotificationManagerCompat notificationManager;
+    float x1,x2,y1,y2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -455,5 +457,32 @@ public class MainActivity extends AppCompatActivity implements AdapterNotif.OnIt
         }
         return false;
     }
+
+    public boolean onTouchEvent(MotionEvent touchEvent){
+        switch(touchEvent.getAction()){
+            case MotionEvent.ACTION_DOWN:
+                x1 = touchEvent.getX();
+                y1 = touchEvent.getY();
+                break;
+            case MotionEvent.ACTION_UP:
+                x2 = touchEvent.getX();
+                y2 = touchEvent.getY();
+                if(x1 < x2){
+                    Intent i = new Intent(MainActivity.this, ListFriendsActivity.class);
+                    startActivity(i);
+                    overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                }else if(x1 > x2){
+                    if(!App.profilsDiscovered.isEmpty()){
+                    Intent i = new Intent(MainActivity.this, PersonDiscoveredActivity.class);
+                    startActivity(i);
+                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                    }
+                }
+            break;
+        }
+        return false;
+    }
+
+
 
 }
