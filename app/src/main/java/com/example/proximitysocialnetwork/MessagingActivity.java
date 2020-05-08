@@ -58,24 +58,37 @@ public class MessagingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messaging);
-        profilContact = ListFriendsActivity.profilsFriends.get(0);
         pictureContact = findViewById(R.id.profile_pic_contact);
         sendMessage = findViewById(R.id.button_send);
         textMessage = findViewById(R.id.editText_message);
         nameContact = findViewById(R.id.name_contact);
         messages = findViewById(R.id.rv_messages);
 
+        Intent iin= getIntent();
+        Bundle b = iin.getExtras();
+
+        if(b!=null)
+        {
+            int id =(int) b.get("id_profil");
+            profilContact = ListFriendsActivity.profilsFriends.get(id);
+        }
+
+
         nameContact.setText(profilContact.getName());
 
         sessionManager = new SessionManager(this);
         urlDownload = "http://89.87.13.28:8800/database/proximity_social_network/images/" + profilContact.getProfileImage() + ".jpg";
         downloadProfileImage();
-        getMessage(false);
+
+        // get all the messages
+        getMessage();
+
+        // thread deal the http push when new message
         TreadMessages thread = new TreadMessages();
         thread.start();
 
 
-        messages.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        messages.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true));
         adapter = new AdapterMessages(this, messagesArrays);
         messages.setAdapter(adapter);
 
@@ -233,7 +246,7 @@ public class MessagingActivity extends AppCompatActivity {
         }
         return false;
     }
-    
+
     class TreadMessages extends Thread {
         @Override
         public void run() {

@@ -11,8 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.proximitysocialnetwork.Message;
 import com.example.proximitysocialnetwork.R;
 import java.util.ArrayList;
-
-
+import java.util.Collections;
 
 
 /**
@@ -27,13 +26,16 @@ public class AdapterMessages extends RecyclerView.Adapter<AdapterMessages.ViewHo
 
     //Constructor
     public AdapterMessages(Context context, ArrayList<Message> messages){
+
         this.messages = messages;
         this.context = context;
+
     }
 
     @Override
     public int getItemViewType(int position) {
-        Message message = messages.get(position);
+        final int posRevers = messages.size() - (position + 1);
+        Message message = messages.get(posRevers);
 
         if (message.isSelf()) {
             return SELF;
@@ -59,7 +61,8 @@ public class AdapterMessages extends RecyclerView.Adapter<AdapterMessages.ViewHo
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         //Adding messages to the views
-        Message message = messages.get(position);
+        final int posRevers = messages.size() - (position + 1);
+        Message message = messages.get(posRevers);
         holder.textViewMessage.setText(message.getText());
         holder.textViewTime.setText(message.getTime());
     }
