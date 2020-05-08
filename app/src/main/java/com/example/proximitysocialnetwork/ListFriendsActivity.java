@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ListFriendsActivity extends AppCompatActivity {
+public class ListFriendsActivity extends AppCompatActivity implements AdapterProfilesFriends.OnItemClickListener{
     public static ArrayList<Profil> profilsFriends = new ArrayList<>();
     private RecyclerView rv;
     private AdapterProfilesFriends MyAdapter;
@@ -49,6 +49,7 @@ public class ListFriendsActivity extends AppCompatActivity {
         rv.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         MyAdapter = new AdapterProfilesFriends(profilsFriends, this);
         rv.setAdapter(MyAdapter);
+        MyAdapter.setonItemClickListener(ListFriendsActivity.this);
 
     }
 
@@ -145,4 +146,11 @@ public class ListFriendsActivity extends AppCompatActivity {
         }
         return false;
     }
+
+    public void onItemClick(int position) {
+        Intent intent = new Intent(ListFriendsActivity.this, MessagingActivity.class);
+        intent.putExtra("id_profil", position);
+        startActivity(intent);
+    }
+
 }
