@@ -472,11 +472,11 @@ public class MainActivity extends AppCompatActivity implements AdapterNotif.OnIt
                     startActivity(i);
                     overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
                 }else if(x1 > x2){
-                    //if(!App.profilsDiscovered.isEmpty()){
-                    Intent i = new Intent(MainActivity.this, MessagingActivity.class);
+                    if(!App.profilsDiscovered.isEmpty()){
+                    Intent i = new Intent(MainActivity.this, PersonDiscoveredActivity.class);
                     startActivity(i);
                     overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                    //}
+                    }
                 }
             break;
         }

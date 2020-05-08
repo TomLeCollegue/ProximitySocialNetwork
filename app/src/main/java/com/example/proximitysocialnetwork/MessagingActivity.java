@@ -173,22 +173,6 @@ public class MessagingActivity extends AppCompatActivity {
                 return params;
             }
         };
-        stringRequest.setRetryPolicy(new RetryPolicy() {
-            @Override
-            public int getCurrentTimeout() {
-                return 50000;
-            }
-
-            @Override
-            public int getCurrentRetryCount() {
-                return 50000;
-            }
-
-            @Override
-            public void retry(VolleyError error) throws VolleyError {
-
-            }
-        });
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
     }
@@ -210,7 +194,6 @@ public class MessagingActivity extends AppCompatActivity {
 
 
                         }
-                        getMessage();
                         textMessage.setText("");
                     }
                 } catch (JSONException e) {
