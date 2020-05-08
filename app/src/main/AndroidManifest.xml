@@ -24,7 +24,8 @@
         android:roundIcon="@mipmap/logo_proximity_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ListFriendsActivity"></activity>
+        <activity android:name=".MessagingActivity"></activity>
+        <activity android:name=".ListFriendsActivity" />
         <activity
             android:name=".EditPasswordActivity"
             android:screenOrientation="sensorPortrait" />
