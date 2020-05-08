@@ -4,8 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -15,9 +17,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.StringRequest;
@@ -47,6 +51,7 @@ public class MessagingActivity extends AppCompatActivity {
     private ArrayList<Message> messagesArrays = new ArrayList<>();
     private AdapterMessages adapter;
     private EditText textMessage;
+    private Handler mainHandler = new Handler();
 
 
     @Override
@@ -63,9 +68,12 @@ public class MessagingActivity extends AppCompatActivity {
         nameContact.setText(profilContact.getName());
 
         sessionManager = new SessionManager(this);
-        urlDownload = "http://89.87.13.28:8800/database/proximity_social_network/images/" + profilContact.getProfileImage() +".jpg";
+        urlDownload = "http://89.87.13.28:8800/database/proximity_social_network/images/" + profilContact.getProfileImage() + ".jpg";
         downloadProfileImage();
         getMessage(false);
+        TreadMessages thread = new TreadMessages();
+        thread.start();
+
 
         messages.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         adapter = new AdapterMessages(this, messagesArrays);
@@ -82,8 +90,7 @@ public class MessagingActivity extends AppCompatActivity {
 
     }
 
-
-    public void downloadProfileImage(){
+    public void downloadProfileImage() {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         ImageRequest request = new ImageRequest(urlDownload, new Response.Listener<Bitmap>() {
             @Override
@@ -101,43 +108,38 @@ public class MessagingActivity extends AppCompatActivity {
         requestQueue.add(request);
     }
 
-    public void getMessage(boolean updateAfterCharging){
+    public void getMessage() {
         String url;
-        if(!updateAfterCharging) {
-            url = "http://89.87.13.28:8800/database/proximity_social_network/php-request/getMessages.php";
-        }
-        else{
-            url = "http://89.87.13.28:8800/database/proximity_social_network/php-request/getNewMessages.php";
-        }
+        url = "http://89.87.13.28:8800/database/proximity_social_network/php-request/getMessages.php";
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                try{
+                try {
                     JSONObject jsonObject = new JSONObject(response);
                     String success = jsonObject.getString("success");
                     JSONArray jsonArray = jsonObject.getJSONArray("login");
 
-                    if (success.equals("1")){
-                        for (int i = 0; i < jsonArray.length(); i++){
+                    if (success.equals("1")) {
+                        for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject object = jsonArray.getJSONObject(i);
 
                             String text = object.getString("text").trim();
                             String self = object.getString("self").trim();
                             String time = object.getString("time").trim();
-                            Boolean selfBool = false ;
-                            if(self.equals("true")){
+                            Boolean selfBool = false;
+                            if (self.equals("true")) {
                                 selfBool = true;
                             }
 
-                            Message message = new Message(text,profilContact.getName(), selfBool, time);
-                            if(!containsMessage(message)){
+                            Message message = new Message(text, profilContact.getName(), selfBool, time);
+                            if (!containsMessage(message)) {
                                 messagesArrays.add(message);
                             }
                         }
-                    adapter.notifyDataSetChanged();
+                        adapter.notifyDataSetChanged();
                     }
-                }
-                catch (JSONException e){
+                } catch (JSONException e) {
                     e.printStackTrace();
                     Toast.makeText(getApplicationContext(), " error " + e.toString(), Toast.LENGTH_LONG).show();
                 }
@@ -154,36 +156,51 @@ public class MessagingActivity extends AppCompatActivity {
                 Map<String, String> params = new HashMap<>();
                 params.put("email", sessionManager.getUserDetail().get(sessionManager.EMAIL));
                 params.put("email_contact", profilContact.getEmail());
-                params.put("nbMessages", messagesArrays.size()+"");
+                params.put("nbMessages", messagesArrays.size() + "");
                 return params;
             }
         };
+        stringRequest.setRetryPolicy(new RetryPolicy() {
+            @Override
+            public int getCurrentTimeout() {
+                return 50000;
+            }
+
+            @Override
+            public int getCurrentRetryCount() {
+                return 50000;
+            }
+
+            @Override
+            public void retry(VolleyError error) throws VolleyError {
+
+            }
+        });
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
     }
 
-    public void sendMessage(){
+    public void sendMessage() {
         String url = "http://89.87.13.28:8800/database/proximity_social_network/php-request/sendMessage.php";
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                try{
+                try {
                     JSONObject jsonObject = new JSONObject(response);
                     String success = jsonObject.getString("success");
                     JSONArray jsonArray = jsonObject.getJSONArray("login");
 
-                    if (success.equals("1")){
-                        for (int i = 0; i < jsonArray.length(); i++){
+                    if (success.equals("1")) {
+                        for (int i = 0; i < jsonArray.length(); i++) {
                             JSONObject object = jsonArray.getJSONObject(i);
 
 
                         }
-                        getMessage(false);
+                        getMessage();
                         textMessage.setText("");
                     }
-                }
-                catch (JSONException e){
+                } catch (JSONException e) {
                     e.printStackTrace();
                     Toast.makeText(getApplicationContext(), " error " + e.toString(), Toast.LENGTH_LONG).show();
                 }
@@ -208,12 +225,94 @@ public class MessagingActivity extends AppCompatActivity {
         requestQueue.add(stringRequest);
     }
 
-    public boolean containsMessage(Message message){
+    public boolean containsMessage(Message message) {
         for (int i = 0; i < messagesArrays.size(); i++) {
-            if(messagesArrays.get(i).getTime().equals(message.getTime())){
+            if (messagesArrays.get(i).getTime().equals(message.getTime())) {
                 return true;
             }
         }
         return false;
     }
+    
+    class TreadMessages extends Thread {
+        @Override
+        public void run() {
+            getMessage();
+        }
+
+        public void getMessage() {
+            String url;
+            url = "http://89.87.13.28:8800/database/proximity_social_network/php-request/getNewMessages.php";
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(response);
+                        String success = jsonObject.getString("success");
+                        JSONArray jsonArray = jsonObject.getJSONArray("login");
+
+                        if (success.equals("1")) {
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject object = jsonArray.getJSONObject(i);
+
+                                String text = object.getString("text").trim();
+                                String self = object.getString("self").trim();
+                                String time = object.getString("time").trim();
+                                Boolean selfBool = false;
+                                if (self.equals("true")) {
+                                    selfBool = true;
+                                }
+
+                                Message message = new Message(text, profilContact.getName(), selfBool, time);
+                                if (!containsMessage(message)) {
+                                    messagesArrays.add(message);
+                                }
+                            }
+                            adapter.notifyDataSetChanged();
+                            getMessage();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        Toast.makeText(getApplicationContext(), " error " + e.toString(), Toast.LENGTH_LONG).show();
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Toast.makeText(getApplicationContext(), "Erreur de connexion" + error, Toast.LENGTH_LONG).show();
+
+                }
+            }) {
+                @Override
+                protected Map<String, String> getParams() throws AuthFailureError {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("email", sessionManager.getUserDetail().get(sessionManager.EMAIL));
+                    params.put("email_contact", profilContact.getEmail());
+                    params.put("nbMessages", messagesArrays.size() + "");
+                    return params;
+                }
+            };
+            stringRequest.setRetryPolicy(new RetryPolicy() {
+                @Override
+                public int getCurrentTimeout() {
+                    return 50000;
+                }
+
+                @Override
+                public int getCurrentRetryCount() {
+                    return 50000;
+                }
+
+                @Override
+                public void retry(VolleyError error) throws VolleyError {
+
+                }
+            });
+            RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+            requestQueue.add(stringRequest);
+        }
+
+
+    }
+
 }
