@@ -165,8 +165,9 @@ public class MainActivity extends AppCompatActivity implements AdapterNotif.OnIt
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.alpha);
-                editButton.startAnimation(animation);
+                //Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.alpha);
+                //editButton.startAnimation(animation);
+                editButton.setColorFilter(ContextCompat.getColor(getApplicationContext(),R.color.gray));
                 startActivity(new Intent(MainActivity.this, EditAccountActivity.class));
                 finish();
             }
