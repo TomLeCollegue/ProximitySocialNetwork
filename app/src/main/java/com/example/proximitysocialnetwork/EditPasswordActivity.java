@@ -2,11 +2,14 @@ package com.example.proximitysocialnetwork;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -18,6 +21,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -39,6 +45,10 @@ public class EditPasswordActivity extends AppCompatActivity {
 
     String mEmail;
 
+    Context mContext;
+
+    Animation animation;
+
     String urlEditPassword = "http://89.87.13.28:8800/database/proximity_social_network/php-request/editPassword.php";
 
 
@@ -46,6 +56,9 @@ public class EditPasswordActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_password);
+        mContext = getApplicationContext();
+
+        animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.lefttoright);
 
         oldPassword = (EditText) findViewById(R.id.oldPassword);
         newPassword = (EditText) findViewById(R.id.newPassword);
@@ -69,13 +82,16 @@ public class EditPasswordActivity extends AppCompatActivity {
                     Pattern patternPassword = Pattern.compile(regexPassword);
                     Matcher matcherPassword = patternPassword.matcher(newPassword.getText().toString().trim());
 
-                    oldPassword.setBackgroundResource(R.drawable.plaintextstylegreen);
-                    oldPassword.setTextColor(getResources().getColor(R.color.ColorGreen));
 
                     if(matcherPassword.find()) {
                         editPassword();
-                        startActivity(new Intent(EditPasswordActivity.this, EditAccountActivity.class));
-                        finish();
+                    }
+                    else if (!matcherPassword.find()){
+                        newPassword.setBackgroundResource(R.drawable.plaintextstylered);
+                        newPassword.setTextColor(getResources().getColor(R.color.ColorRed));
+                        newPassword.startAnimation(animation);
+                        Toast.makeText(getApplicationContext(),"Password must be at least 8 characters, " +
+                                "and must include at least one upper case letter, one lower case letter, and one numeric digit or special character.", Toast.LENGTH_LONG).show();
                     }
                 }
             }
@@ -83,13 +99,35 @@ public class EditPasswordActivity extends AppCompatActivity {
 
     }
     public void editPassword(){
+        animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.lefttoright);
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, urlEditPassword,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Toast.makeText(EditPasswordActivity.this, "success password édité", Toast.LENGTH_SHORT).show();
                         Log.d(TAG, response);
+                        JSONObject jsonObject;
+                        try {
+                            jsonObject = new JSONObject(response);
+                            Log.d(TAG, jsonObject.getString("message"));
+                            if (jsonObject.getString("message").equals("success")){
+                                Toast.makeText(EditPasswordActivity.this, "success password édité", Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(EditPasswordActivity.this, EditAccountActivity.class));
+                                finish();
+                            }
+                            else if (jsonObject.getString("message").equals("error")) {
+                                oldPassword.startAnimation(animation);
+                                oldPassword.setBackgroundResource(R.drawable.plaintextstylered);
+                                oldPassword.setTextColor(getResources().getColor(R.color.ColorRed));
+                                Toast.makeText(EditPasswordActivity.this, "Wrong Password", Toast.LENGTH_SHORT).show();
+                            }
+
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            btnEditPassword.startAnimation(animation);
+                            Toast.makeText(EditPasswordActivity.this, "Error"+e.toString(), Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }, new Response.ErrorListener() {
             @Override
